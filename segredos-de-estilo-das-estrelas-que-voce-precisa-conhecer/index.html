@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segredos de Estilo das Estrelas que Você Precisa Conhecer - Louca por Cosméticos</title>
+    <meta name="description" content="Descubra os segredos de estilo das estrelas e transforme seu visual com dicas exclusivas que vão elevar sua moda a outro nível!">
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/moda/" style="color:#ffffff;">Moda</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Segredos de Estilo das Estrelas que Você Precisa Conhecer</h1>
+            
+            
+                <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem; line-height: 1.5;">Descubra os segredos de estilo das estrelas e transforme seu visual com dicas exclusivas que vão elevar sua moda a outro nível!</p>
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-09-21" style="color: var(--text-muted);">
+                        21/09/2026 00:00
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/segredos-de-estilo-das-estrelas-que-voce-precisa-conhecer.jpg" alt="Segredos de Estilo das Estrelas que Você Precisa Conhecer">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <p>O fasc&iacute;nio pelo estilo das celebridades nunca sai de moda. Cada passo no tapete vermelho, cada look casual registrado por fot&oacute;grafos de street style, revela tend&ecirc;ncias que rapidamente ganham as ruas. Entender os <strong>segredos de estilo das estrelas</strong> pode transformar seu guarda-roupa, ajudando a criar uma imagem &uacute;nica e sofisticada. Seja para ocasi&otilde;es especiais ou para o dia a dia, esses truques s&atilde;o valiosos para quem deseja elevar o visual com eleg&acirc;ncia e autenticidade.</p>
+<p>No <a href="https://revistaamiga.com.br/" target="_blank" rel="noopener"><strong>mundo dos famosos</strong></a><strong>, </strong>os acess&oacute;rios s&atilde;o verdadeiros aliados para transformar e personalizar o visual. Eles t&ecirc;m o poder de elevar um look simples a outro patamar, adicionando charme e personalidade.</p>
+<h2>Por Que O Estilo Das Celebridades Inspira Tantas Pessoas?</h2>
+<p>O estilo das estrelas &eacute; muito mais do que simplesmente roupas caras ou marcas renomadas. &Eacute; uma forma de express&atilde;o pessoal que comunica identidade, atitude e at&eacute; mesmo valores. A influ&ecirc;ncia das celebridades no mundo da moda &eacute; palp&aacute;vel, pois elas t&ecirc;m acesso a estilistas de ponta, tend&ecirc;ncias exclusivas e experi&ecirc;ncias que moldam seu visual de maneira impactante.</p>
+<p>Al&eacute;m da glamouriza&ccedil;&atilde;o, muitos f&atilde;s buscam nas celebridades a inspira&ccedil;&atilde;o para adaptar tend&ecirc;ncias ao seu pr&oacute;prio estilo, tornando-as refer&ecirc;ncias acess&iacute;veis. A combina&ccedil;&atilde;o perfeita entre ousadia e autenticidade &eacute; um dos motivos pelos quais o <strong>estilo das estrelas</strong> continua sendo uma fonte inesgot&aacute;vel de ideias.</p>
+<h2>Elementos Fundamentais Dos Segredos De Estilo Das Estrelas</h2>
+<h3>1. Conhe&ccedil;a Seu Corpo e Valorize Suas Formas</h3>
+<p>Um dos maiores segredos das celebridades &eacute; o conhecimento profundo do pr&oacute;prio corpo. Independentemente do tipo f&iacute;sico, elas escolhem roupas que real&ccedil;am seus pontos fortes e minimizam &aacute;reas que preferem disfar&ccedil;ar. A chave est&aacute; na escolha de cortes, tecidos e cores que valorizam a silhueta.</p>
+<p>Por exemplo, muitas estrelas apostam em pe&ccedil;as estruturadas para criar defini&ccedil;&atilde;o, como blazers com ombros marcados ou vestidos com cintura marcada. Investir em um bom ajuste &eacute; essencial para garantir um caimento perfeito, que faz toda a diferen&ccedil;a no resultado final.</p>
+<h3>2. Aposte em Pe&ccedil;as Cl&aacute;ssicas com Toques Modernos</h3>
+<p>O guarda-roupa das estrelas &eacute; repleto de itens cl&aacute;ssicos que nunca saem de moda, como trench coats, camisas brancas e jeans de corte reto. O segredo est&aacute; em combinar essas pe&ccedil;as com acess&oacute;rios ou detalhes contempor&acirc;neos que trazem frescor ao visual.</p>
+<p>Um exemplo comum &eacute; a mistura de uma camisa branca tradicional com acess&oacute;rios statement, como brincos grandes, cintos metalizados ou bolsas com design inovador. Essa combina&ccedil;&atilde;o cria um equil&iacute;brio entre o atemporal e o atual, garantindo um look sofisticado e atual.</p>
+<h3>3. Invista em Acess&oacute;rios que Fazem a Diferen&ccedil;a</h3>
+<p>&Oacute;culos de sol estilosos, bolsas diferenciadas, len&ccedil;os de seda e joias delicadas ou exuberantes s&atilde;o escolhas frequentes entre as celebridades. O segredo est&aacute; em saber dosar: usar acess&oacute;rios para complementar sem sobrecarregar, criando harmonia e equil&iacute;brio.</p>
+<h2>Tend&ecirc;ncias De Estilo Das Estrelas Para Voc&ecirc; Aplicar</h2>
+<h3>1. Mistura de Texturas</h3>
+<p>A combina&ccedil;&atilde;o de diferentes texturas &eacute; uma t&eacute;cnica sofisticada que muitas celebridades usam para tornar o visual mais interessante. Misturar couro, seda, renda, veludo e outros tecidos cria profundidade e dinamismo no look.</p>
+<p>Por exemplo, um vestido de seda combinado com uma jaqueta de couro ou botas de veludo s&atilde;o escolhas que trazem contraste e personalidade, al&eacute;m de demonstrar conhecimento de moda.</p>
+<h3>2. Cores Neutras com Pontos de Cor</h3>
+<p>Embora o preto, branco, bege e outros tons neutros dominem muitos looks das estrelas, elas sabem a import&acirc;ncia de inserir pontos de cor para quebrar a monotonia. Um sapato vermelho vibrante, uma bolsa azul royal ou um len&ccedil;o amarelo s&atilde;o exemplos de como uma cor pode transformar o visual.</p>
+<p>Esse segredo &eacute; especialmente &uacute;til para quem prefere um estilo minimalista, mas deseja adicionar um toque de ousadia e frescor.</p>
+<h3>3. Looks Monocrom&aacute;ticos</h3>
+<p>Os looks monocrom&aacute;ticos s&atilde;o uma tend&ecirc;ncia recorrente entre as celebridades. Vestir uma &uacute;nica cor da cabe&ccedil;a aos p&eacute;s cria uma silhueta alongada e elegante, al&eacute;m de transmitir sofistica&ccedil;&atilde;o.</p>
+<p>Para n&atilde;o ficar mon&oacute;tono, as estrelas investem em varia&ccedil;&otilde;es de tons e texturas dentro da mesma paleta, garantindo um efeito visual impactante.</p>
+<h2>Cuidados Essenciais Para Um Estilo Impec&aacute;vel</h2>
+<h3>1. Aten&ccedil;&atilde;o &agrave; Escolha do Tecido</h3>
+<p>A qualidade do tecido faz toda a diferen&ccedil;a no resultado do look. Celebridades costumam investir em materiais nobres que proporcionam melhor caimento, conforto e durabilidade.</p>
+<p>Ao escolher suas roupas, d&ecirc; prefer&ecirc;ncia a tecidos naturais como algod&atilde;o, linho, l&atilde; e seda. Eles al&eacute;m de mais confort&aacute;veis, tendem a ter um acabamento mais elegante, refletindo um estilo refinado.</p>
+<h3>2. Ajustes e Alfaiataria</h3>
+<p>Nada valoriza mais o visual do que uma pe&ccedil;a ajustada perfeitamente ao corpo. Muitas estrelas recorrem a alfaiates para personalizar suas roupas, garantindo que cada detalhe esteja impec&aacute;vel.</p>
+<p>Seja para um vestido de festa, um terno ou uma camisa, fazer pequenos ajustes pode transformar uma pe&ccedil;a comum em algo exclusivo e que real&ccedil;a suas melhores caracter&iacute;sticas.</p>
+<h3>3. Manuten&ccedil;&atilde;o e Conserva&ccedil;&atilde;o das Roupas</h3>
+<p>Um segredo pouco falado, mas essencial, &eacute; o cuidado com as roupas. Manter as pe&ccedil;as limpas, passadas e bem conservadas demonstra aten&ccedil;&atilde;o aos detalhes e respeito pelo estilo pessoal.</p>
+<p>Celebridades sabem que um look bem cuidado transmite uma imagem mais elegante e profissional, refor&ccedil;ando a import&acirc;ncia da manuten&ccedil;&atilde;o adequada.</p>
+<h2>Como Adaptar Os Segredos Das Estrelas Ao Seu Estilo Pessoal</h2>
+<h3>1. Identifique o Que Combina com Sua Personalidade</h3>
+<p>Nem todas as tend&ecirc;ncias ou estilos das estrelas se encaixam perfeitamente em sua rotina ou personalidade. O primeiro passo &eacute; entender o que reflete quem voc&ecirc; &eacute; e adaptar os <strong>segredos de estilo das estrelas</strong> para seu cotidiano.</p>
+<p>Se voc&ecirc; &eacute; mais discreta, talvez prefira investir em pe&ccedil;as cl&aacute;ssicas com pequenos detalhes modernos. J&aacute; quem &eacute; mais ousada pode apostar em combina&ccedil;&otilde;es de cores vibrantes e acess&oacute;rios mais chamativos.</p>
+<h3>2. Fa&ccedil;a Combina&ccedil;&otilde;es Inteligentes</h3>
+<p>Usar a criatividade para montar looks a partir das pe&ccedil;as que voc&ecirc; j&aacute; possui &eacute; fundamental. Celebridades s&atilde;o mestres em reinventar o que t&ecirc;m, misturando itens b&aacute;sicos com outros mais elaborados para criar produ&ccedil;&otilde;es &uacute;nicas.</p>
+<p>Tente combinar roupas com diferentes estilos, texturas e cores para encontrar combina&ccedil;&otilde;es que surpreendam e elevem seu guarda-roupa.</p>
+<h3>3. Confian&ccedil;a &eacute; o Melhor Acess&oacute;rio</h3>
+<p>Mais do que qualquer roupa ou acess&oacute;rio, a confian&ccedil;a &eacute; o que realmente transforma um visual. Celebridades sabem que vestir algo com seguran&ccedil;a e atitude faz toda a diferen&ccedil;a.</p>
+<p>Independentemente da pe&ccedil;a escolhida, use-a com orgulho e autenticidade. Essa &eacute; a verdadeira magia do estilo, que vai muito al&eacute;m das tend&ecirc;ncias.</p>
+<h2>Dicas Pr&aacute;ticas Para Incorporar O Estilo Das Estrelas No Dia A Dia</h2>
+<h3>1. Planeje Seus Looks com Anteced&ecirc;ncia</h3>
+<p>Uma pr&aacute;tica comum entre as celebridades &eacute; planejar os looks antes de eventos ou compromissos importantes. Isso evita decis&otilde;es de &uacute;ltima hora e garante que o visual esteja alinhado com a ocasi&atilde;o.</p>
+<p>Reserve um tempo para organizar seu guarda-roupa e criar combina&ccedil;&otilde;es que possam ser usadas facilmente, facilitando o dia a dia.</p>
+<h3>2. Invista em Itens-Chave Vers&aacute;teis</h3>
+<p>Pe&ccedil;as-chave como um bom blazer, um vestido preto b&aacute;sico, jeans de qualidade e sapatos confort&aacute;veis s&atilde;o indispens&aacute;veis para montar diversos looks estilosos.</p>
+<p>Esses itens vers&aacute;teis permitem que voc&ecirc; crie produ&ccedil;&otilde;es diferentes com poucos elementos, facilitando a montagem de um guarda-roupa funcional e elegante.</p>
+<h3>3. Atualize-se com Modera&ccedil;&atilde;o</h3>
+<p>Embora acompanhar tend&ecirc;ncias seja interessante, o excesso pode prejudicar a constru&ccedil;&atilde;o de um estilo pessoal s&oacute;lido. Use as tend&ecirc;ncias como inspira&ccedil;&atilde;o, adaptando-as ao seu gosto e necessidades.</p>
+<p>Lembre-se de que o estilo das estrelas &eacute; resultado de escolhas conscientes e n&atilde;o de seguir todas as modas ao p&eacute; da letra.</p>
+<h2>Conclus&atilde;o: Torne-Se A Pr&oacute;pria Estrela Do Estilo</h2>
+<p>Os <strong>segredos de estilo das estrelas</strong> revelam que a eleg&acirc;ncia e a sofistica&ccedil;&atilde;o est&atilde;o ao alcance de todos que desejam investir em autoconhecimento, aten&ccedil;&atilde;o aos detalhes e escolhas inteligentes. O mundo da moda &eacute; vasto e repleto de possibilidades, e as celebridades apenas nos mostram o caminho para expressar nossa melhor vers&atilde;o.</p>
+<p>Incorporar essas dicas no seu dia a dia pode transformar n&atilde;o s&oacute; o visual, mas tamb&eacute;m a maneira como voc&ecirc; se sente consigo mesma. Afinal, estilo &eacute; uma forma poderosa de comunica&ccedil;&atilde;o e autoconfian&ccedil;a. Fa&ccedil;a do seu guarda-roupa um reflexo da sua personalidade e brilhe como uma verdadeira estrela, inspirando e encantando onde quer que v&aacute;.</p>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
