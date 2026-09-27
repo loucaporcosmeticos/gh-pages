@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua vitrine precisa de uma renovação com painéis modulares? - Louca por Cosméticos</title>
+    <meta name="description" content="Renove sua vitrine com painéis modulares modernos e versáteis. Transforme seu espaço e atraia mais clientes com estilo e praticidade!">
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/beleza/" style="color:#ffffff;">Beleza</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Sua vitrine precisa de uma renovação com painéis modulares?</h1>
+            
+            
+                <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem; line-height: 1.5;">Renove sua vitrine com painéis modulares modernos e versáteis. Transforme seu espaço e atraia mais clientes com estilo e praticidade!</p>
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-09-27" style="color: var(--text-muted);">
+                        27/09/2026 00:00
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/sua-vitrine-precisa-de-uma-renovacao-com-paineis-modulares.jpg" alt="Sua vitrine precisa de uma renovação com painéis modulares?">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <p>A <strong>vitrine</strong> &eacute; o cart&atilde;o de visita de qualquer estabelecimento comercial. Ela &eacute; o primeiro contato visual que o cliente tem com a loja, influenciando diretamente na decis&atilde;o de entrar ou n&atilde;o no espa&ccedil;o. Por isso, manter a vitrine atualizada, atrativa e funcional &eacute; essencial para aumentar o fluxo de pessoas e potencializar as vendas. Uma das solu&ccedil;&otilde;es que tem ganhado destaque para renovar vitrines de maneira pr&aacute;tica e eficiente s&atilde;o os <strong>pain&eacute;is modulares</strong>.</p>
+<p>No caso de ambientes que demandam maior flexibilidade, como lojas de m&oacute;veis ou decora&ccedil;&atilde;o, a combina&ccedil;&atilde;o dos pain&eacute;is modulares com estruturas como a <a href="https://www.ciaexpositores.com.br/cremalheira/estantes-cremalheiras" target="_blank" rel="noopener">estante cremalheira para loja</a> oferece uma solu&ccedil;&atilde;o completa. Essa combina&ccedil;&atilde;o possibilita n&atilde;o s&oacute; a exposi&ccedil;&atilde;o vertical eficaz, mas tamb&eacute;m o ajuste da altura e profundidade das prateleiras, atendendo a diferentes tamanhos e tipos de produtos. A estante cremalheira, integrada aos pain&eacute;is, contribui para a organiza&ccedil;&atilde;o e melhora a experi&ecirc;ncia do cliente ao permitir uma visualiza&ccedil;&atilde;o clara e acess&iacute;vel dos itens.</p>
+<h2>O Que S&atilde;o Pain&eacute;is Modulares E Por Que Escolher Essa Solu&ccedil;&atilde;o?</h2>
+<p>Os <strong>pain&eacute;is modulares</strong> s&atilde;o sistemas estruturados com pe&ccedil;as que se encaixam, permitindo montar, desmontar e reorganizar a exibi&ccedil;&atilde;o conforme a necessidade. Eles podem ser feitos de diversos materiais, como madeira, metal, vidro ou at&eacute; pl&aacute;stico, e oferecem uma versatilidade incr&iacute;vel para a cria&ccedil;&atilde;o de layouts &uacute;nicos.</p>
+<p>Optar por pain&eacute;is modulares para renovar a vitrine traz vantagens significativas:</p>
+<p>- <strong>Flexibilidade:</strong> &Eacute; poss&iacute;vel ajustar a disposi&ccedil;&atilde;o dos pain&eacute;is para destacar diferentes produtos ao longo do tempo.</p>
+<p>- <strong>Praticidade:</strong> A montagem e desmontagem s&atilde;o simples, facilitando mudan&ccedil;as r&aacute;pidas de cen&aacute;rio.</p>
+<p>- <strong>Est&eacute;tica moderna:</strong> O design clean e personaliz&aacute;vel agrega valor visual &agrave; vitrine.</p>
+<p>- <strong>Durabilidade:</strong> Materiais de qualidade garantem resist&ecirc;ncia e longa vida &uacute;til.</p>
+<p>Al&eacute;m disso, essa solu&ccedil;&atilde;o permite que comerciantes adaptem o espa&ccedil;o para diferentes campanhas sazonais, lan&ccedil;amentos ou promo&ccedil;&otilde;es especiais, tornando a vitrine din&acirc;mica e sempre atual.</p>
+<h2>Benef&iacute;cios Da Renova&ccedil;&atilde;o Da Vitrine Com Pain&eacute;is Modulares</h2>
+<p>Renovar a vitrine com pain&eacute;is modulares n&atilde;o &eacute; apenas uma quest&atilde;o est&eacute;tica, mas tamb&eacute;m estrat&eacute;gica. A mudan&ccedil;a no visual pode atrair olhares curiosos e despertar o interesse do p&uacute;blico-alvo. Entre os principais benef&iacute;cios desse tipo de renova&ccedil;&atilde;o, destacam-se:</p>
+<h3>1. Aumento da atratividade visual</h3>
+<p>A vitrine &eacute; um espa&ccedil;o limitado, e a organiza&ccedil;&atilde;o dos produtos precisa ser feita com intelig&ecirc;ncia. Pain&eacute;is modulares permitem criar composi&ccedil;&otilde;es harm&ocirc;nicas, ressaltando os artigos mais importantes. A possibilidade de variar texturas, cores e ilumina&ccedil;&atilde;o em cada m&oacute;dulo torna o visual mais interessante e capaz de captar a aten&ccedil;&atilde;o do p&uacute;blico rapidamente.</p>
+<h3>2. Organiza&ccedil;&atilde;o e otimiza&ccedil;&atilde;o do espa&ccedil;o</h3>
+<p>Com pain&eacute;is modulares, a vitrine ganha uma estrutura mais organizada. &Eacute; poss&iacute;vel segmentar &aacute;reas espec&iacute;ficas para diferentes categorias de produtos, facilitando a exposi&ccedil;&atilde;o e evitando a sensa&ccedil;&atilde;o de bagun&ccedil;a. Um layout bem planejado ajuda o cliente a encontrar o que deseja com mais facilidade, o que pode aumentar o tempo de perman&ecirc;ncia e a chance de compra.</p>
+<h3>3. Facilidade na manuten&ccedil;&atilde;o e atualiza&ccedil;&atilde;o</h3>
+<p>Uma vitrine est&aacute;tica pode se tornar mon&oacute;tona e perder o apelo com o tempo. Os pain&eacute;is modulares possibilitam trocas r&aacute;pidas e simples, seja para atualizar produtos, inserir elementos decorativos ou mudar a tem&aacute;tica da exposi&ccedil;&atilde;o. Isso diminui custos e tempo gasto com reformas e, ainda por cima, mant&eacute;m a comunica&ccedil;&atilde;o da loja sempre fresca.</p>
+<h2>Como Escolher Os Pain&eacute;is Modulares Ideais Para Sua Vitrine?</h2>
+<p>A escolha dos pain&eacute;is modulares deve considerar alguns pontos importantes para garantir que o investimento traga o retorno esperado:</p>
+<h3>Material e resist&ecirc;ncia</h3>
+<p>A vitrine est&aacute; sujeita a varia&ccedil;&otilde;es de temperatura, luz solar direta e ao movimento constante de pessoas. Por isso, optar por materiais resistentes, que n&atilde;o desbotem facilmente e suportem o desgaste, &eacute; fundamental. Pain&eacute;is de metal, MDF revestido ou vidro temperado s&atilde;o op&ccedil;&otilde;es comuns que aliam durabilidade e est&eacute;tica.</p>
+<h3>Tamanho e modularidade</h3>
+<p>Avalie o espa&ccedil;o dispon&iacute;vel para a vitrine e escolha um sistema modular que permita varia&ccedil;&otilde;es no tamanho dos pain&eacute;is. Isso facilita a montagem de composi&ccedil;&otilde;es variadas, que podem se adaptar a diferentes tipos de produtos, desde roupas e cal&ccedil;ados at&eacute; eletr&ocirc;nicos e acess&oacute;rios.</p>
+<h3>Estilo e identidade visual</h3>
+<p>A vitrine deve refletir o conceito da marca. Por isso, os pain&eacute;is modulares precisam estar alinhados ao estilo da loja, seja ele mais cl&aacute;ssico, moderno, minimalista ou r&uacute;stico. A escolha das cores, texturas e acabamentos deve complementar o posicionamento da marca e transmitir a mensagem correta ao p&uacute;blico.</p>
+<h3>Integra&ccedil;&atilde;o com ilumina&ccedil;&atilde;o</h3>
+<p>A ilumina&ccedil;&atilde;o &eacute; um elemento chave para valorizar a vitrine. Pain&eacute;is modulares que permitem a instala&ccedil;&atilde;o de spots, fitas de LED ou luzes direcionadas garantem que os produtos fiquem em evid&ecirc;ncia, destacando detalhes e criando um ambiente convidativo.</p>
+<h2>A Versatilidade Dos Pain&eacute;is Modulares Em Diferentes Tipos De Com&eacute;rcio</h2>
+<p>Seja em lojas de roupas, livrarias, perfumarias ou eletr&ocirc;nicos, os pain&eacute;is modulares adaptam-se facilmente &agrave;s necessidades espec&iacute;ficas de cada segmento. Por exemplo, em uma loja de moda, os pain&eacute;is podem ser combinados com cabideiros, prateleiras e ganchos para exibir roupas e acess&oacute;rios de forma organizada e atraente.</p>
+<p>Em estabelecimentos que trabalham com produtos variados, como multimarcas ou lojas de departamento, a modularidade permite criar ambientes distintos dentro da mesma vitrine, facilitando a segmenta&ccedil;&atilde;o dos produtos e a comunica&ccedil;&atilde;o visual.</p>
+<h2>Dicas Para Potencializar Sua Vitrine Com Pain&eacute;is Modulares</h2>
+<p>Para que a renova&ccedil;&atilde;o da vitrine com pain&eacute;is modulares seja um sucesso, algumas pr&aacute;ticas complementares podem fazer toda a diferen&ccedil;a:</p>
+<h3>Invista em uma boa ilumina&ccedil;&atilde;o</h3>
+<p>Como mencionado, a luz tem o poder de destacar os produtos e criar atmosferas que ajudam a contar hist&oacute;rias. Aposte em ilumina&ccedil;&atilde;o direcionada para pontos estrat&eacute;gicos da vitrine, utilizando l&acirc;mpadas de LED que s&atilde;o econ&ocirc;micas e dur&aacute;veis.</p>
+<h3>Utilize elementos decorativos tempor&aacute;rios</h3>
+<p>Flores, tecidos, objetos tem&aacute;ticos e at&eacute; mesmo elementos sazonais (como decora&ccedil;&atilde;o natalina ou para o Dia das M&atilde;es) podem ser incorporados aos pain&eacute;is modulares para criar um ambiente mais atraente e personalizado.</p>
+<h3>Mantenha a vitrine sempre limpa e organizada</h3>
+<p>Nenhuma t&eacute;cnica de exposi&ccedil;&atilde;o funcionar&aacute; se a vitrine estiver suja ou desorganizada. A manuten&ccedil;&atilde;o constante &eacute; fundamental para transmitir profissionalismo e cuidado, refor&ccedil;ando a boa impress&atilde;o do cliente.</p>
+<h3>Crie pontos focais</h3>
+<p>Use os pain&eacute;is para destacar lan&ccedil;amentos, promo&ccedil;&otilde;es ou produtos de maior valor agregado. A cria&ccedil;&atilde;o de um ponto focal na vitrine direciona o olhar do cliente e ajuda a guiar sua aten&ccedil;&atilde;o para aquilo que realmente importa.</p>
+<h3>Atualize regularmente o conte&uacute;do</h3>
+<p>A din&acirc;mica da vitrine deve acompanhar as tend&ecirc;ncias e o calend&aacute;rio comercial. A modularidade dos pain&eacute;is facilita essas atualiza&ccedil;&otilde;es, garantindo que o visual da loja esteja sempre alinhado com as expectativas do p&uacute;blico e com as estrat&eacute;gias de marketing.</p>
+<h2>Exemplos Pr&aacute;ticos De Uso Dos Pain&eacute;is Modulares Em Vitrines</h2>
+<p>V&aacute;rias lojas de sucesso j&aacute; adotaram os pain&eacute;is modulares como parte de sua estrat&eacute;gia de exposi&ccedil;&atilde;o. Por exemplo, uma boutique de moda pode usar pain&eacute;is coloridos e com texturas diferenciadas para separar roupas casuais das roupas de festa, criando um contraste visual que facilita a escolha do cliente.</p>
+<p>Um com&eacute;rcio de eletr&ocirc;nicos pode optar por pain&eacute;is met&aacute;licos com ilumina&ccedil;&atilde;o embutida para real&ccedil;ar os dispositivos em exposi&ccedil;&atilde;o, enquanto uma livraria pode utilizar pain&eacute;is de madeira clara para transmitir aconchego e destacar os lan&ccedil;amentos liter&aacute;rios.</p>
+<p>Esses exemplos mostram como a modularidade contribui para a personaliza&ccedil;&atilde;o da vitrine, tornando cada espa&ccedil;o &uacute;nico e alinhado com o perfil do p&uacute;blico-alvo.</p>
+<h2>Considera&ccedil;&otilde;es Finais Sobre Renova&ccedil;&atilde;o De Vitrines Com Pain&eacute;is Modulares</h2>
+<p>A renova&ccedil;&atilde;o da vitrine &eacute; uma a&ccedil;&atilde;o estrat&eacute;gica que impacta diretamente na percep&ccedil;&atilde;o da marca e no desempenho comercial. Os pain&eacute;is modulares surgem como uma solu&ccedil;&atilde;o vers&aacute;til, pr&aacute;tica e esteticamente agrad&aacute;vel para transformar esse espa&ccedil;o t&atilde;o importante.</p>
+<p>Ao investir em sistemas modulares, o comerciante ganha flexibilidade para adaptar a vitrine &agrave;s necessidades do neg&oacute;cio, melhorar a apresenta&ccedil;&atilde;o dos produtos e manter o ambiente sempre atualizado e convidativo.</p>
+<p>Portanto, se a vitrine da sua loja precisa de um novo f&ocirc;lego, considerar os pain&eacute;is modulares pode ser o caminho ideal para conquistar a aten&ccedil;&atilde;o do p&uacute;blico e impulsionar os resultados do seu neg&oacute;cio.</p>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
