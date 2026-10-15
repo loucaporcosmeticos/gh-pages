@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brazilian Spa by Luci in Hanahan: Esthetic Care, Waxing, and Skin Rejuvenation - Louca por Cosméticos</title>
+    <meta name="description" content="">
+    
+    
+    <link rel="canonical" href="https://loucaporcosmeticos.com.br/brazilian-spa-by-luci-in-hanahan-esthetic-care-waxing-and-skin-rejuvenation/" />
+    
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/moda/" style="color:#ffffff;">Moda</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Brazilian Spa by Luci in Hanahan: Esthetic Care, Waxing, and Skin Rejuvenation</h1>
+            
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-10-15" style="color: var(--text-muted);">
+                        15/10/2026 14:56
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/brazilian-spa-by-luci-in-hanahan-esthetic-care-waxing-and-skin-rejuvenation.webp?v=1792076183" alt="Brazilian Spa by Luci in Hanahan: Esthetic Care, Waxing, and Skin Rejuvenation">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <div id="model-response-message-contentr_fcb95ad5d0c0774b" class="markdown markdown-main-panel md-content enable-luminous-fast-follows enable-updated-hr-color stronger" dir="ltr" style="--animation-duration: 400ms; --fade-animation-function: ease-out; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" aria-busy="false" aria-live="polite">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Maintaining dermal health and achieving smooth, hair-free skin requires an understanding of clinical esthetics, follicular biology, and targeted barrier restoration. Across the greater Charleston metropolitan area&mdash;encompassing Hanahan, North Charleston, Mount Pleasant, and Goose Creek&mdash;the coastal Lowcountry climate presents distinctive challenges to skin wellness. Intense ultraviolet (UV) radiation, prolonged periods of high relative humidity, and airborne oceanic salinity frequently lead to dermal dehydration, hyperpigmentation, clogged sebaceous filaments, and follicular irritation following standard hair removal. Generic, assembly-line salon treatments often fail to address individual Fitzpatrick skin profiles, resulting in broken hairs, painful folliculitis, or damaged skin barriers.</div>
+<br>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><a href="https://brazilianspabyluci.com/"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="2" data-index-in-node="0">Brazilian Spa by Luci in Hanahan</strong></a> provides an expert, boutique alternative centered on specialized Brazilian waxing protocols, clinical facials, gentle organic sugaring, and holistic skin rejuvenation. Combining authentic Brazilian depilatory techniques with modern dermal science, this dedicated practice focuses on precise hair removal, ingrown prevention, and restorative facial therapies that rebuild skin health. This guide details the advanced waxing methodologies, facial peel chemistries, sugaring physics, and personalized skincare protocols delivered by <strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="2" data-index-in-node="563">Brazilian Spa by Luci in Hanahan</strong>.</div>
+<br>
+<div class="attachment-container search-images md-has-block-component" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></div>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="5">Authentic Brazilian Depilatory Science: Hard Wax vs. Soft Wax Dynamics</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Hair removal across intimate anatomical contours demands deep knowledge of follicular angles, skin elasticity, and thermal wax formulations. Authentic Brazilian waxing differs substantially from standard domestic strip waxing, primarily through the exclusive application of high-grade elastic hard wax.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-666 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQsgk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-666" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-666" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-666" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-666 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">+-----------------------------------------------------------------------------------------+
+|                                  DEPILATORY WAX MECHANICS MATRIX                        |
++--------------------------+-----------------------+------------------+-------------------+
+| Wax Formulation Type     | Adhesive Mechanism    | Skin Traumatization| Follicle Extraction|
++--------------------------+-----------------------+------------------+-------------------+
+| Polymer Hard Wax         | Shrink-Wraps Hair Shaft| Near Zero (Gentle)| Full Bulb Retention|
+| Traditional Soft Strip   | Adheres to Skin &amp; Hair| High (Stripping) | Prone to Breakage |
+| Pure Organic Sugaring    | Seeps into Follicle   | Extremely Low    | Natural Direction |
+| Low-Temp Synthetic Resin | Polymerized Flexibility| Minimal / Safe   | Root Removal 1mm  |
++--------------------------+-----------------------+------------------+-------------------+
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="8">The Physics of Elastic Polymer Hard Wax</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Standard soft wax requires paper or muslin strips to remove hair. It bonds indiscriminately to both the keratin of the hair shaft and the living cells of the epidermal stratum corneum, removing the top protective layer of skin and causing redness, bruising, and lifting.</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="10">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="10,0,0" data-index-in-node="0">Shrink-Wrap Encapsulation:</strong> High-grade polymer hard wax operates at lower temperatures (typically between 105&deg;F and 115&deg;F), softening comfortably on the skin. As it sets, the wax shrink-wraps around the hair shaft down into the follicle orifice without sticking to the moist skin surface.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="10,1,0" data-index-in-node="0">Elimination of Skin Pull:</strong> Because the wax bonds solely to hair, technicians remove the strip with a swift parallel motion without pulling the delicate epidermal barrier. This reduces discomfort and makes it suitable for sensitive intimate areas like the labia, perineum, and intergluteal cleft.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="10,2,0" data-index-in-node="0">Full Bulb Removal (Anagen Phase):</strong> Hard wax pulls the hair follicle cleanly from the dermal papilla. Consistent extraction during the early growth (anagen) phase weakens root regeneration, resulting in finer, sparser regrowth over time.</div>
+</li>
+</ul>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="12">Comprehensive Pre- and Post-Wax Protocols: Folliculitis and Ingrown Defense</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Preventing post-depilatory complications&mdash;such as ingrown hairs, post-inflammatory hyperpigmentation (PIH), and bacterial folliculitis&mdash;requires strict pre-care cleansing and post-wax barrier conditioning.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-667 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQswk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-667" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-667" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-667" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-667 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">       [ Client Intake &amp; Skin Sensitivity Assessment ]
+                              |
+                              v
+       [ Pre-Cleanse: Antimicrobial Cleanser &amp; Jasmine Oil Barrier ]
+                              |
+                              v
+       [ Precision Multi-Directional Hard Wax Application ]
+                              |
+                              v
+       [ Low-Angle Parallel Extraction with Manual Pressure Relief ]
+                              |
+                              v
+       [ Post-Depilatory Soothing: Tea Tree / Chamomile Calming Tonic ]
+                              |
+                              v
+       [ Home Care: Chemical Exfoliation (AHA/BHA) &amp; Hydro-Gel ]
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="15">Eliminating the Root Causes of Ingrown Hairs</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Ingrown hairs develop when curved hair shafts cannot pierce through dense layers of dead skin cells (keratin plugs), causing the hair to curl back into the hair follicle:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="17">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="17,0,0" data-index-in-node="0">Pre-Wax Skin Preparation:</strong> The skin is cleansed with an antimicrobial wash to remove oils, perspiration, and bacteria. A thin layer of natural pre-wax oil (such as lavender or jasmine oil) is applied to act as a lipid barrier between the wax and the skin, ensuring zero skin adherence while anchoring the hair.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="17,1,0" data-index-in-node="0">Targeted Post-Wax Soothing:</strong> Immediately following extraction, technicians apply firm, manual hand pressure to soothe localized sensory nerve receptors, reducing the perception of discomfort. Calming formulas infused with azulene, tea tree oil, and aloe vera neutralize irritation and close exposed follicles.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="17,2,0" data-index-in-node="0">Home Exfoliation Regimens:</strong> Clients receive guidance on using gentle chemical exfoliants&mdash;such as salicylic acid (BHA) and glycolic acid (AHA)&mdash;beginning 48 hours post-treatment. Salicylic acid clears debris inside the pore lining, while glycolic acid smooths surface skin cells, keeping the follicle path open for smooth regrowth.</div>
+</li>
+</ul>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">The video below highlights how professional estheticians combine relaxing techniques with systematic skin prep to enhance client comfort and clinical results:</div>
+<br>
+<div class="attachment-container unknown md-has-block-component" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="carousel-scroll-area" style="--carousel-item-max-width: 708px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="group">
+<div class="carousel-container" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="base-video-card has-metadata" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" tabindex="0" role="button" aria-label="Most relaxing facial ever😇✨#facial #spa #asmr" data-hveid="1">
+<div class="base-video-container" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<div class="base-video-thumbnail ng-star-inserted" style="background-image: url('https://i.ytimg.com/vi/0l-ahwFHcrQ/maxresdefault.jpg'); font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-scrim ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-platform-icon-container ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><img style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" src="data:image/png;base64,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" width="192" height="192"></div>
+<!---->
+<div class="base-video-player-icon ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!----><!----><!----><!----></div>
+<div class="base-video-timestamp-badge ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">1:27</div>
+<!----><!----></div>
+<div class="base-video-metadata ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="base-video-title ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" title="Most relaxing facial ever😇✨#facial #spa #asmr">Most relaxing facial ever😇✨#facial #spa #asmr</div>
+<!---->
+<div class="base-video-subtitle ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><span class="base-video-platform-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">YouTube</span><!----><span class="base-video-separator ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"> &middot; </span><!----><span class="base-video-creator-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Aylen Park</span><!----></div>
+<!----></div>
+<!----></div>
+<!----><!----><!----><!----><!---->
+<div class="base-video-card has-metadata" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" tabindex="0" role="button" aria-label="deep cleansing facial treatment" data-hveid="2">
+<div class="base-video-container" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<div class="base-video-thumbnail ng-star-inserted" style="background-image: url('https://i.ytimg.com/vi/k750Cid2h8U/maxresdefault.jpg'); font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-scrim ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-platform-icon-container ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><img style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" src="data:image/png;base64,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" width="192" height="192"></div>
+<!---->
+<div class="base-video-player-icon ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!----><!----><!----><!----></div>
+<div class="base-video-timestamp-badge ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">0:10</div>
+<!----><!----></div>
+<div class="base-video-metadata ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="base-video-title ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" title="deep cleansing facial treatment">deep cleansing facial treatment</div>
+<!---->
+<div class="base-video-subtitle ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><span class="base-video-platform-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">YouTube</span><!----><span class="base-video-separator ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"> &middot; </span><!----><span class="base-video-creator-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Victoria Aesthetics London</span><!----></div>
+<!----></div>
+<!----></div>
+<!----><!----><!----><!----><!---->
+<div class="base-video-card has-metadata" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" tabindex="0" role="button" aria-label="ASMR Facial on Meghan Morrison" data-hveid="3">
+<div class="base-video-container" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<div class="base-video-thumbnail ng-star-inserted" style="background-image: url('https://i.ytimg.com/vi/64_kkQPiBas/maxresdefault.jpg'); font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-scrim ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">&nbsp;</div>
+<div class="base-video-platform-icon-container ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><img style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" src="data:image/png;base64,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" width="192" height="192"></div>
+<!---->
+<div class="base-video-player-icon ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!----><!----><!----><!----></div>
+<div class="base-video-timestamp-badge ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">0:07</div>
+<!----><!----></div>
+<div class="base-video-metadata ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="base-video-title ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" title="ASMR Facial on Meghan Morrison">ASMR Facial on Meghan Morrison</div>
+<!---->
+<div class="base-video-subtitle ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><span class="base-video-platform-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">YouTube</span><!----><span class="base-video-separator ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"> &middot; </span><!----><span class="base-video-creator-name ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Boho Med Spa</span><!----></div>
+<!----></div>
+<!----></div>
+<!----><!----><!----><!----><!----><!----></div>
+</div>
+<!----><!----><button class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-badge mat-mdc-button-disabled mat-unthemed mat-badge-overlap mat-badge-above mat-badge-after mat-badge-small mat-badge-hidden ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" disabled="disabled" aria-label="Rolar o carrossel para a esquerda"><!----><!----><!----><!----></button><!----><!----><!----><!----><button class="mdc-icon-button mat-mdc-icon-button mat-mdc-button-base mat-badge mat-unthemed mat-badge-overlap mat-badge-above mat-badge-after mat-badge-small mat-badge-hidden ng-star-inserted" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" aria-label="Rolar o carrossel para a direita"><!----><!----><!----><!----></button><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----></div>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="21">Custom Clinical Facials: Dermal Peels and Barrier Restoration</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Healthy skin requires treatments customized to individual concerns. In the humid Lowcountry, heat stimulates excess sebum production, while strong sun exposure accelerates cellular oxidation and premature aging.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-668 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQtQk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-668" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-668" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-668" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-668 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">+-----------------------------------------------------------------------------------------+
+|                                CLINICAL FACIAL TREATMENT SPECTRUM                       |
++--------------------------+-----------------------+------------------+-------------------+
+| Facial Modality          | Primary Active Agent  | Target Skin Concern| Clinical Benefit  |
++--------------------------+-----------------------+------------------+-------------------+
+| Deep Cleansing Enzyme    | Papaya / Pineapple Fer.| Dull Strata, Comedones| Non-Abrasive Slough|
+| Lactic Hydration Peel    | Alpha-Hydroxy Acid    | Moisture Depleted| Ceramide Synthesis|
+| Salicylic Clarifying Peel| Beta-Hydroxy Acid     | Acne, Excess Sebum| Follicular Purge  |
+| Ultrasonic Resurfacing   | 28kHz Sound Wave Vibe | Congested Blackheads Deep Cavitation    |
+| Hydro-Jelly Firming Mask | Electrolyte / Alginate| Trans-Epidermal Loss Occlusive Seal     |
++--------------------------+-----------------------+------------------+-------------------+
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="24">Diagnostic Skin Typing and Barrier Repair</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Every custom facial begins with a skin analysis under a magnifying lamp:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="26">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="26,0,0" data-index-in-node="0">Restoring the Acid Mantle:</strong> Over-washing and harsh weather disrupt the skin&rsquo;s natural lipid mantle (ideal pH 4.5 to 5.5). Treatments utilize gentle cleansers and humectants (like hyaluronic acid and glycerin) to restore moisture without stripping essential lipids.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="26,1,0" data-index-in-node="0">Enzyme Exfoliation:</strong> Natural fruit enzymes digest dead keratin proteins on the skin's surface without the micro-tears caused by abrasive physical scrubs.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="26,2,0" data-index-in-node="0">Ultrasonic Skin Scrubbing:</strong> Low-frequency sound vibrations (28,000 Hz) create micro-cavitation bubbles in water applied to the skin, lifting sebum, blackheads, and environmental debris from open pores without manual squeezing or bruising.</div>
+</li>
+</ul>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="27">Electrolyte-Infused Hydro-Jelly Finishes</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Following extractions or light chemical exfoliation, an electrolyte-infused hydro-jelly mask provides cooling relief:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="29">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="29,0,0" data-index-in-node="0">Vacuum-Like Seal:</strong> The organic alginate base forms an airtight seal over the facial contours, locking moisture deep into the tissue and preventing evaporation.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="29,1,0" data-index-in-node="0">Targeted Calming:</strong> Active ingredients like calendula, marine algae, and centella asiatica soothe redness, strengthen capillaries, and leave the complexion plump, hydrated, and refreshed.</div>
+</li>
+</ul>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="31">Sugar Waxing Services: The Organic Epilation Alternative</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">For clients with reactive skin, sensitive vascular systems, or a preference for organic beauty, body sugaring provides a gentle alternative to traditional waxing.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-669 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQtgk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-669" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-669" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-669" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-669 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">+-------------------------------------------------------------------------+
+|                    SUGARING VS. TRADITIONAL WAX DYNAMICS                |
++-------------------------------------------------------------------------+
+| [ Formulation ]       -&gt; 100% Organic Lemon Juice, Cane Sugar, Water    |
+| [ Thermal State ]     -&gt; Room Temperature / Lukewarm (Zero Burn Risk)   |
+| [ Application Vector] -&gt; Applied Against Natural Hair Growth Direction  |
+| [ Extraction Vector ] -&gt; Flicked WITH Natural Hair Growth Direction     |
+| [ Residue Clean ]     -&gt; Water-Soluble (Dissolves Cleanly in Water)     |
++-------------------------------------------------------------------------+
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="34">The Geometry of Sugaring Extraction</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Sugaring paste uses only three natural ingredients: organic sugar, water, and lemon juice, cooked into a malleable amber paste:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,0,0" data-index-in-node="0">Room Temperature Application:</strong> Because sugaring paste is used at lukewarm body temperature, it carries no risk of thermal burns.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,1,0" data-index-in-node="0">Extraction in the Direction of Growth:</strong> Unlike traditional waxing, sugar paste is applied <em style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,1,0" data-index-in-node="89">against</em> natural hair growth, allowing it to seep into the follicle opening and grip the root. The paste is then flicked off <em style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,1,0" data-index-in-node="213">with</em> the natural direction of growth.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,2,0" data-index-in-node="0">Reduced Hair Breakage:</strong> Extracting hair in its natural direction minimizes follicle stress, prevents hair from breaking off at the surface, and significantly reduces the occurrence of ingrown hairs.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="36,3,0" data-index-in-node="0">Gentle on Sensitive Skin:</strong> Sugar cannot adhere to live, moist skin cells. It gently lifts dead skin while leaving the living epidermis undisturbed, making it an ideal choice for clients prone to eczema, psoriasis, or sensitive capillaries.</div>
+</li>
+</ul>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="38">Spray Tanning and Holistic Skin Rejuvenation</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Achieving a sun-kissed glow without exposure to carcinogenic ultraviolet rays is essential for long-term skin health, especially along the coastal waterways of South Carolina.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-670 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQtwk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-670" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-670" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-670" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-670 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">       [ Custom Consultation: Fitzpatrick Skin Tone Analysis ]
+                                  |
+                                  v
+       [ Barrier Cream Application: Palms, Cuticles, Soles, Knees ]
+                                  |
+                                  v
+       [ HVLP Airbrush Application: Fine Micro-Mist Atomization ]
+                                  |
+       [ DHA / Erythrulose Reactive Complexion Browning ]
+                                  |
+                                  v
+       [ Post-Mist Moisture Lock &amp; Quick-Dry Translucent Powder ]
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="41">The Chemistry of Clean Spray Tanning</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Professional custom spray tanning utilizes fine airbrush application to deliver natural, customized results:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="43">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="43,0,0" data-index-in-node="0">The Maillard Reaction:</strong> The active ingredient, Dihydroxyacetone (DHA), derived from sugar beets, reacts with amino acids in the dead protein cells of the surface stratum corneum. This reaction produces melanoidin pigments, creating a natural tan without skin damage.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="43,1,0" data-index-in-node="0">Blended Formulations:</strong> Modern solutions combine rapid DHA with erythrulose&mdash;a secondary natural sugar that develops slower&mdash;ensuring a longer-lasting, even fade without orange or yellow undertones.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="43,2,0" data-index-in-node="0">High-Volume Low-Pressure (HVLP) Application:</strong> Precise handheld airbrush equipment allows the technician to tailor shading along muscle lines and facial contours, ensuring smooth, streak-free coverage that looks natural on all skin tones.</div>
+</li>
+</ul>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="45">Coastal Skin Defense: Managing Lowcountry Humidity and UV Exposure</h2>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">The coastal South Carolina climate requires specific skincare adaptations to manage high humidity, sun exposure, and ocean salinity.</div>
+<br><!----><!----><!----><!----><!----><!----><!----><!---->
+<div class="code-block ng-tns-c3641845170-671 ng-animate-disabled ng-trigger ng-trigger-codeBlockRevealAnimation" style="display: block; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-hveid="0" data-ved="0CAAQhtANahgKEwip7OTqkbyXAxUAAAAAHQAAAAAQuAk"><!---->
+<div class="formatted-code-block-internal-container ng-tns-c3641845170-671" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div class="animated-opacity ng-tns-c3641845170-671" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><!---->
+<pre class="ng-tns-c3641845170-671" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><code class="code-container formatted ng-tns-c3641845170-671 no-decoration-radius" style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" role="text" data-test-id="code-content">+-------------------------------------------------------------------------+
+|                  COASTAL LOWCOUNTRY SKIN DEFENSE CHECKLIST              |
++-------------------------------------------------------------------------+
+| [&radic;] Switch to lightweight, non-comedogenic hyaluronic gel moisturizers. |
+| [&radic;] Apply broad-spectrum mineral SPF 30+ daily (zinc oxide/titanium).   |
+| [&radic;] Wait 24 to 48 hours post-wax before swimming in salt or chlorinated pool.|
+| [&radic;] Avoid intense heat (hot tubs, saunas, hot yoga) right after depilation.|
+| [&radic;] Incorporate gentle enzymatic exfoliation twice weekly to prevent plugs.|
++-------------------------------------------------------------------------+
+</code></pre>
+<!----></div>
+</div>
+</div>
+<!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!----><!---->
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="48">Protecting Sensitized Follicles After Waxing</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Post-wax skin requires gentle care, particularly in warm, humid climates:</div>
+<br>
+<ul style="padding-inline-start: 32px; font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="50">
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="50,0,0" data-index-in-node="0">The 48-Hour Protection Window:</strong> Freshly emptied hair follicles remain open and vulnerable to bacterial entry for 24 to 48 hours. Sweating during heavy exercise, sitting in hot tubs, or swimming in the ocean or chlorinated pools right after waxing introduces bacteria, increasing the risk of red folliculitis bumps.</div>
+</li>
+<li style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;"><strong style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="50,1,0" data-index-in-node="0">Mineral Sun Protection:</strong> Newly exfoliated and treated skin is more susceptible to ultraviolet hyperpigmentation. Using broad-spectrum physical mineral sunscreens (zinc oxide and titanium dioxide) shields the skin without irritating open pores.</div>
+</li>
+</ul>
+<h2 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="52">Frequently Asked Questions (FAQ)</h2>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="53">What services are offered at Brazilian Spa by Luci in Hanahan?</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">The spa specializes in complete authentic Brazilian waxing, facial waxing, full-body waxing for women and men, organic sugar waxing (body sugaring), custom clinical facials, deep-cleansing enzyme treatments, chemical peel resurfacing, anti-aging therapies, professional custom spray tanning, and personalized skin rejuvenation regimens.</div>
+<br>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="55">Does a Brazilian wax using hard wax hurt less than soft strip wax?</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Yes, significantly less. High-quality polymer hard wax adheres solely to the hair shafts rather than pulling the delicate living surface of the skin. As it cools, it shrink-wraps the hairs, allowing clean extraction from the root without stripping the outer skin layers. This approach dramatically reduces redness, bruising, and discomfort compared to traditional soft strip waxes.</div>
+<br>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="57">How long should hair be before booking a Brazilian waxing or sugaring appointment?</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">For optimal extraction from the root, hair should be roughly 1/4 inch long&mdash;about the size of a grain of rice. This typically requires allowing hair to grow for 2 to 3 weeks following your last shave. If the hair is too short, the wax cannot grip the shaft cleanly; if it is excessively long, technicians can trim it to the ideal length before beginning.</div>
+<br>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="59">How does body sugaring differ from traditional waxing?</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">Body sugaring uses an all-natural paste made from sugar, water, and lemon juice applied at lukewarm temperature. The paste is applied against the natural direction of hair growth and flicked off in the direction of growth, which minimizes hair breakage and reduces ingrown hairs. Sugaring paste is water-soluble, leaves no sticky residue, and is gentle on sensitive skin.</div>
+<br>
+<h3 style="font-family: Google Sans, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;" data-path-to-node="61">What should I avoid immediately after a Brazilian waxing or facial treatment?</h3>
+<div style="font-family: Google Sans Text, sans-serif !important; line-height: 1.15 !important; margin-top: 0px !important; margin-left: 0px !important; margin-right: 0px !important;">For the first 24 to 48 hours following a waxing or facial service, avoid direct sun exposure, tanning beds, hot showers, saunas, hot tubs, heavy workouts that cause sweating, and swimming in chlorinated pools or the ocean. Keep the treated area clean, wear loose-fitting cotton clothing, and avoid scented lotions or abrasive scrubs until the skin barrier has fully recovered.</div>
+</div>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
