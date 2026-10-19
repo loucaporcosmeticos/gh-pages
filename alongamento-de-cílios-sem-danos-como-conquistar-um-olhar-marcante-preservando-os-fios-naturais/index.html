@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alongamento de Cílios Sem Danos: Como Conquistar um Olhar Marcante Preservando os Fios Naturais - Louca por Cosméticos</title>
+    <meta name="description" content="">
+    
+    
+    <link rel="canonical" href="https://loucaporcosmeticos.com.br/alongamento-de-cílios-sem-danos-como-conquistar-um-olhar-marcante-preservando-os-fios-naturais/" />
+    
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/beleza/" style="color:#ffffff;">Beleza</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Alongamento de Cílios Sem Danos: Como Conquistar um Olhar Marcante Preservando os Fios Naturais</h1>
+            
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-09-23" style="color: var(--text-muted);">
+                        23/09/2026 15:42
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/alongamento-de-cilios-sem-danos-como-conquistar-um-olhar-marcante-preservando-os-fios-naturais.webp?v=1790178145" alt="Alongamento de Cílios Sem Danos: Como Conquistar um Olhar Marcante Preservando os Fios Naturais">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <p>O desejo por um olhar mais expressivo e impactante tem levado muitas pessoas a buscarem t&eacute;cnicas que valorizem os c&iacute;lios. Entre as op&ccedil;&otilde;es dispon&iacute;veis, o <a href="https://parisvegasbeauty.com.br/servicos/cilios/"><strong>alongamento de c&iacute;lios</strong></a> destaca-se como uma solu&ccedil;&atilde;o eficaz para quem quer volume e comprimento instant&acirc;neos. Contudo, a busca por um visual deslumbrante n&atilde;o deve comprometer a sa&uacute;de dos fios naturais. Garantir que o procedimento seja realizado de forma segura e cuidadosa &eacute; essencial para manter a beleza e a integridade dos c&iacute;lios ao longo do tempo.</p>
+<p>Este conte&uacute;do apresenta estrat&eacute;gias e cuidados fundamentais para conquistar um olhar marcante, preservando os fios naturais e evitando danos comuns associados a procedimentos est&eacute;ticos mal executados. Com informa&ccedil;&otilde;es detalhadas, &eacute; poss&iacute;vel entender como obter resultados incr&iacute;veis sem abrir m&atilde;o da sa&uacute;de dos c&iacute;lios.</p>
+<p>---</p>
+<h2>Import&acirc;ncia De Preservar Os Fios Naturais</h2>
+<p>Os c&iacute;lios possuem uma fun&ccedil;&atilde;o biol&oacute;gica importante: proteger os olhos contra poeira, suor e outros agentes externos. Al&eacute;m disso, s&atilde;o respons&aacute;veis por emoldurar o olhar, conferindo expressividade ao rosto. Por isso, qualquer procedimento que envolva esse delicado conjunto de fios deve respeitar sua estrutura e promover cuidados que evitem quedas ou enfraquecimento.</p>
+<p>Muitos procedimentos est&eacute;ticos podem ser agressivos, causando danos como quebra, queda precoce ou at&eacute; inflama&ccedil;&otilde;es. Preservar os c&iacute;lios naturais significa garantir que eles continuem cumprindo suas fun&ccedil;&otilde;es, al&eacute;m de manter a apar&ecirc;ncia saud&aacute;vel e bonita por muito mais tempo.</p>
+<p>---</p>
+<h2>T&eacute;cnicas Seguras Para Real&ccedil;ar O Olhar</h2>
+<p>Para real&ccedil;ar o olhar sem comprometer os c&iacute;lios naturais, &eacute; fundamental optar por t&eacute;cnicas que respeitem a integridade dos fios. Entre as op&ccedil;&otilde;es mais seguras est&atilde;o:</p>
+<h3>Uso de Produtos de Qualidade</h3>
+<p>A escolha de produtos espec&iacute;ficos e de alta qualidade para aplica&ccedil;&atilde;o &eacute; determinante. Colas hipoalerg&ecirc;nicas, extens&otilde;es leves e materiais certificados reduzem o risco de alergias e irrita&ccedil;&otilde;es, al&eacute;m de minimizar o peso sobre os c&iacute;lios naturais.</p>
+<h3>Profissionais Capacitados</h3>
+<p>O resultado final depende muito da habilidade do profissional respons&aacute;vel. T&eacute;cnicas bem aplicadas respeitam o comprimento e a espessura dos fios naturais, evitando a coloca&ccedil;&atilde;o de extens&otilde;es muito pesadas ou em excesso, que podem comprometer a raiz dos c&iacute;lios.</p>
+<h3>Manuten&ccedil;&atilde;o Adequada</h3>
+<p>A manuten&ccedil;&atilde;o peri&oacute;dica &eacute; essencial para garantir que os c&iacute;lios continuem bonitos e saud&aacute;veis. Consultas regulares para remo&ccedil;&atilde;o de extens&otilde;es antigas e reaplica&ccedil;&atilde;o controlada ajudam a evitar ac&uacute;mulo de res&iacute;duos e quedas desnecess&aacute;rias.</p>
+<p>---</p>
+<h2>Cuidados Antes E Depois Do Procedimento</h2>
+<p>Al&eacute;m da t&eacute;cnica e dos materiais utilizados, os cuidados pr&eacute; e p&oacute;s-procedimento influenciam diretamente na durabilidade e na sa&uacute;de dos c&iacute;lios naturais.</p>
+<h3>Prepara&ccedil;&atilde;o da &Aacute;rea</h3>
+<p>Antes da aplica&ccedil;&atilde;o, &eacute; importante realizar uma limpeza profunda para remover qualquer res&iacute;duo de maquiagem, oleosidade ou sujeira. Isso garante melhor ader&ecirc;ncia das extens&otilde;es e reduz a possibilidade de irrita&ccedil;&atilde;o.</p>
+<h3>Evitar Produtos Oleosos</h3>
+<p>Produtos &agrave; base de &oacute;leo, como alguns demaquilantes e cremes, podem comprometer a fixa&ccedil;&atilde;o das extens&otilde;es. Recomenda-se evitar o uso desses itens na &aacute;rea dos olhos durante o per&iacute;odo em que as extens&otilde;es estiverem aplicadas.</p>
+<h3>Higieniza&ccedil;&atilde;o Di&aacute;ria</h3>
+<p>Manter os c&iacute;lios limpos &eacute; fundamental para evitar o ac&uacute;mulo de sujeira e oleosidade, que podem enfraquecer os fios naturais. Utilizar shampoos espec&iacute;ficos para c&iacute;lios ajuda a preservar a estrutura e prolongar a durabilidade do procedimento.</p>
+<p>---</p>
+<h2>Aspectos Essenciais Para Um Alongamento Duradouro E Saud&aacute;vel</h2>
+<p>A t&eacute;cnica de alongamento de c&iacute;lios tem ganhado popularidade devido &agrave; sua capacidade de transformar o olhar de forma r&aacute;pida e eficaz. No entanto, o sucesso do procedimento est&aacute; diretamente ligado &agrave; forma como ele &eacute; realizado e aos cuidados adotados durante o processo.</p>
+<p>Durante o procedimento, a escolha do tipo correto de extens&atilde;o, com peso e comprimento adequados, &eacute; crucial para n&atilde;o sobrecarregar os c&iacute;lios naturais. O profissional deve avaliar o formato dos olhos, o volume dos fios naturais e o estilo desejado para indicar a melhor t&eacute;cnica. Al&eacute;m disso, a aplica&ccedil;&atilde;o deve ser feita fio a fio, com cola de alta qualidade, garantindo a fixa&ccedil;&atilde;o sem prejudicar os c&iacute;lios originais.</p>
+<p>Outro ponto importante &eacute; a aten&ccedil;&atilde;o &agrave; frequ&ecirc;ncia das manuten&ccedil;&otilde;es. Intervalos muito longos podem comprometer o resultado final, enquanto manuten&ccedil;&otilde;es muito frequentes podem causar desgaste. O equil&iacute;brio &eacute; fundamental para manter a sa&uacute;de dos fios e o aspecto impec&aacute;vel do olhar.</p>
+<p>---</p>
+<h2>Dicas Para Evitar Danos E Queda Dos C&iacute;lios Naturais</h2>
+<p>A preocupa&ccedil;&atilde;o com a sa&uacute;de dos c&iacute;lios &eacute; v&aacute;lida, pois procedimentos mal realizados ou cuidados inadequados podem resultar em danos irrevers&iacute;veis. Para evitar problemas, algumas dicas pr&aacute;ticas s&atilde;o essenciais:</p>
+<h3>Evite Esfregar os Olhos</h3>
+<p>Esfregar os olhos com for&ccedil;a &eacute; uma das principais causas de queda dos c&iacute;lios. Esse h&aacute;bito fragiliza os fios e pode at&eacute; descolar as extens&otilde;es, promovendo um aspecto irregular e prejudicando a sa&uacute;de dos c&iacute;lios.</p>
+<h3>Cuidado com o Uso de R&iacute;mel</h3>
+<p>Embora o alongamento ofere&ccedil;a volume e comprimento, muitas pessoas ainda optam por usar r&iacute;mel para intensificar o efeito. &Eacute; importante escolher m&aacute;scaras espec&iacute;ficas para c&iacute;lios com extens&otilde;es, que sejam livres de &oacute;leo e f&aacute;ceis de remover.</p>
+<h3>Remo&ccedil;&atilde;o Adequada</h3>
+<p>A remo&ccedil;&atilde;o das extens&otilde;es deve ser feita por profissionais qualificados. Tentativas caseiras podem causar quebra e queda dos c&iacute;lios naturais, al&eacute;m de irrita&ccedil;&otilde;es na pele ao redor dos olhos.</p>
+<p>---</p>
+<h2>Benef&iacute;cios Do Procedimento Quando Feito Corretamente</h2>
+<p>Quando realizado com responsabilidade, o alongamento proporciona diversos benef&iacute;cios que v&atilde;o al&eacute;m da est&eacute;tica:</p>
+<p>- <strong>Olhar mais definido e expressivo</strong>, valorizando a beleza natural;</p>
+<p>- <strong>Praticidade no dia a dia</strong>, reduzindo a necessidade de maquiagem;</p>
+<p>- <strong>Aumento da autoestima</strong>, com resultados vis&iacute;veis e duradouros;</p>
+<p>- <strong>Preserva&ccedil;&atilde;o dos c&iacute;lios naturais</strong>, caso os cuidados sejam seguidos &agrave; risca.</p>
+<p>Estes benef&iacute;cios fazem com que o procedimento seja uma escolha inteligente para quem deseja um visual marcante sem abrir m&atilde;o da sa&uacute;de dos fios.</p>
+<p>---</p>
+<h2>Como Escolher O Profissional Ideal</h2>
+<p>A escolha do profissional &eacute; um dos passos mais importantes para garantir um resultado satisfat&oacute;rio e seguro. Algumas orienta&ccedil;&otilde;es ajudam a fazer essa sele&ccedil;&atilde;o com mais seguran&ccedil;a:</p>
+<p>- <strong>Verificar a forma&ccedil;&atilde;o e certifica&ccedil;&otilde;es</strong> do especialista;</p>
+<p>- <strong>Buscar indica&ccedil;&otilde;es e avalia&ccedil;&otilde;es de clientes anteriores</strong>;</p>
+<p>- <strong>Avaliar a higiene e organiza&ccedil;&atilde;o do local</strong> onde o procedimento ser&aacute; realizado;</p>
+<p>- <strong>Solicitar uma avalia&ccedil;&atilde;o pr&eacute;via</strong>, para entender o que &eacute; poss&iacute;vel realizar de acordo com os fios naturais.</p>
+<p>Um profissional qualificado &eacute; capaz de oferecer orienta&ccedil;&otilde;es personalizadas e garantir que o procedimento seja feito respeitando a sa&uacute;de dos c&iacute;lios.</p>
+<p>---</p>
+<h2>Mitos E Verdades Sobre O Procedimento</h2>
+<p>A popularidade do alongamento de c&iacute;lios tamb&eacute;m gerou muitas d&uacute;vidas e informa&ccedil;&otilde;es equivocadas. Conhecer os fatos reais ajuda a evitar frustra&ccedil;&otilde;es e a garantir a seguran&ccedil;a do procedimento.</p>
+<h3>Mito: O procedimento causa queda definitiva dos c&iacute;lios naturais</h3>
+<p>Quando realizado corretamente e com os devidos cuidados, o procedimento n&atilde;o provoca queda permanente. A queda natural dos c&iacute;lios ocorre independentemente do alongamento e deve ser respeitada.</p>
+<h3>Verdade: A manuten&ccedil;&atilde;o &eacute; essencial para a sa&uacute;de dos c&iacute;lios</h3>
+<p>Manter o cronograma de manuten&ccedil;&atilde;o evita ac&uacute;mulo de res&iacute;duos e sobrecarga nos fios, preservando a integridade dos c&iacute;lios naturais.</p>
+<h3>Mito: Pode ser feito em qualquer momento, sem restri&ccedil;&otilde;es</h3>
+<p>Pessoas com alergias, infec&ccedil;&otilde;es nos olhos ou condi&ccedil;&otilde;es espec&iacute;ficas devem evitar o procedimento at&eacute; que estejam completamente recuperadas.</p>
+<p>---</p>
+<h2>Conclus&atilde;o</h2>
+<p>Conquistar um olhar marcante e impactante n&atilde;o precisa ser sin&ocirc;nimo de danos aos c&iacute;lios naturais. Com t&eacute;cnicas adequadas, produtos de qualidade, profissionais capacitados e cuidados constantes, &eacute; poss&iacute;vel real&ccedil;ar a beleza dos olhos de forma saud&aacute;vel e duradoura. O equil&iacute;brio entre est&eacute;tica e sa&uacute;de &eacute; o segredo para um resultado que surpreende e mant&eacute;m a integridade dos fios ao longo do tempo, garantindo um visual sempre impec&aacute;vel e natural.</p>
+<p>Investir em conhecimento e aten&ccedil;&atilde;o aos detalhes faz toda a diferen&ccedil;a na escolha do procedimento e na manuten&ccedil;&atilde;o do olhar dos sonhos. Afinal, c&iacute;lios bonitos s&atilde;o aqueles que est&atilde;o fortes, saud&aacute;veis e bem cuidados.</p>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
