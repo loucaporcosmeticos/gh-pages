@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Melhores procedimentos para um cuidado pessoal premium na zona sul - Louca por Cosméticos</title>
+    <meta name="description" content="Descubra os melhores procedimentos para um cuidado pessoal premium na Zona Sul e eleve sua rotina de beleza com exclusividade e qualidade.">
+    
+    
+    <link rel="canonical" href="https://loucaporcosmeticos.com.br/melhores-procedimentos-para-um-cuidado-pessoal-premium-na-zona-sul/" />
+    
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/moda/" style="color:#ffffff;">Moda</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Melhores procedimentos para um cuidado pessoal premium na zona sul</h1>
+            
+            
+                <p style="font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2rem; line-height: 1.5;">Descubra os melhores procedimentos para um cuidado pessoal premium na Zona Sul e eleve sua rotina de beleza com exclusividade e qualidade.</p>
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-10-28" style="color: var(--text-muted);">
+                        28/10/2026 00:00
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/melhores-procedimentos-para-um-cuidado-pessoal-premium-na-zona-sul.jpg" alt="Melhores procedimentos para um cuidado pessoal premium na zona sul">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <p>A busca por <strong>cuidados pessoais premium</strong> tem crescido significativamente, principalmente em regi&otilde;es nobres como a zona sul das grandes cidades. O estilo de vida agitado, aliado &agrave; valoriza&ccedil;&atilde;o do bem-estar e da apar&ecirc;ncia, impulsiona a procura por tratamentos que oferecem resultados eficazes, conforto e exclusividade. Investir em procedimentos personalizados e de alta qualidade &eacute; essencial para quem deseja manter a sa&uacute;de, a beleza e o equil&iacute;brio emocional em dia.</p>
+<p>A zona sul destaca-se por oferecer uma vasta gama de servi&ccedil;os sofisticados, que atendem &agrave;s necessidades de um p&uacute;blico exigente e atento &agrave;s &uacute;ltimas tend&ecirc;ncias. Desde cl&iacute;nicas de est&eacute;tica avan&ccedil;ada at&eacute; spas de luxo, o que n&atilde;o falta s&atilde;o op&ccedil;&otilde;es para quem deseja um cuidado diferenciado, que vai al&eacute;m do simples tratamento superficial.</p>
+<p>Um dos bairros que se destaca na zona sul &eacute; o Morumbi, conhecido por sua infraestrutura completa e pela concentra&ccedil;&atilde;o de cl&iacute;nicas de alto padr&atilde;o. A <a href="https://drasimoneparadela.com.br/" target="_blank" rel="noopener">Est&eacute;tica no Morumbi</a> apresenta uma forte tradi&ccedil;&atilde;o em oferecer tratamentos que combinam tecnologia avan&ccedil;ada e atendimento personalizado.</p>
+<h2>Cuidados Essenciais Para Um Cuidado Pessoal De Alto Padr&atilde;o</h2>
+<p>Para alcan&ccedil;ar um <strong>cuidado pessoal premium</strong>, &eacute; fundamental compreender que os tratamentos devem ser integrativos, combinando aspectos f&iacute;sicos, mentais e emocionais. O foco est&aacute; em proporcionar uma experi&ecirc;ncia completa, que envolve desde a prepara&ccedil;&atilde;o da pele at&eacute; terapias de relaxamento e reequil&iacute;brio energ&eacute;tico.</p>
+<h3>Tratamentos faciais personalizados</h3>
+<p>Entre os procedimentos mais procurados, destacam-se os tratamentos faciais que utilizam tecnologia de ponta, como lasers, radiofrequ&ecirc;ncia e peelings qu&iacute;micos suaves. Esses m&eacute;todos promovem a renova&ccedil;&atilde;o celular, a redu&ccedil;&atilde;o de linhas de express&atilde;o e a melhora da textura da pele, sempre respeitando a individualidade de cada cliente.</p>
+<p>Al&eacute;m disso, a aplica&ccedil;&atilde;o de produtos com ativos concentrados, como vitamina C, &aacute;cido hialur&ocirc;nico e col&aacute;geno, potencializa os resultados. A combina&ccedil;&atilde;o desses elementos faz com que o rosto apresente uma apar&ecirc;ncia mais jovem, hidratada e luminosa, caracter&iacute;sticas fundamentais para quem busca um cuidado premium.</p>
+<h3>Terapias corporais exclusivas</h3>
+<p>O corpo tamb&eacute;m merece aten&ccedil;&atilde;o especial. Procedimentos como drenagem linf&aacute;tica manual, massagens modeladoras e tratamentos com tecnologias como ultrassom e criolip&oacute;lise t&ecirc;m ganhado espa&ccedil;o nos centros de beleza da zona sul. Essas t&eacute;cnicas ajudam a melhorar a circula&ccedil;&atilde;o, reduzir medidas e combater a celulite, al&eacute;m de promover relaxamento muscular e bem-estar geral.</p>
+<p>A personaliza&ccedil;&atilde;o das sess&otilde;es, aliada ao uso de produtos de alta qualidade e profissionais altamente capacitados, garante uma experi&ecirc;ncia &uacute;nica e eficaz para cada cliente.</p>
+<h2>Espa&ccedil;os De Luxo Para O Cuidado Pessoal Na Zona Sul</h2>
+<p>Ambientes sofisticados s&atilde;o parte fundamental do conceito de cuidado premium. Cl&iacute;nicas e spas localizados na zona sul investem em infraestrutura moderna, decora&ccedil;&atilde;o elegante e atendimento exclusivo, criando um ambiente que eleva a experi&ecirc;ncia do cliente.</p>
+<h3>Atendimento personalizado e consultoria especializada</h3>
+<p>Antes de iniciar qualquer procedimento, &eacute; comum que o cliente passe por uma avalia&ccedil;&atilde;o detalhada, feita por profissionais especializados. Essa etapa &eacute; crucial para identificar as necessidades espec&iacute;ficas e tra&ccedil;ar um plano de tratamento adequado, evitando riscos e aumentando as chances de sucesso.</p>
+<p>Consultorias de beleza e bem-estar tamb&eacute;m s&atilde;o oferecidas, auxiliando na escolha dos melhores produtos para uso di&aacute;rio, rotinas de cuidados e dicas para manter os resultados alcan&ccedil;ados com os procedimentos realizados.</p>
+<h3>Tecnologia e inova&ccedil;&atilde;o a favor do cuidado pessoal</h3>
+<p>A zona sul conta com cl&iacute;nicas que investem constantemente em tecnologias inovadoras para garantir tratamentos mais eficazes e confort&aacute;veis. Equipamentos modernos, como lasers fracionados, aparelhos de ultrassom microfocado e sistemas de luz pulsada, proporcionam resultados vis&iacute;veis em menos tempo e com menor desconforto.</p>
+<p>Essa combina&ccedil;&atilde;o de inova&ccedil;&atilde;o tecnol&oacute;gica com a expertise dos profissionais eleva o padr&atilde;o dos servi&ccedil;os oferecidos, consolidando a regi&atilde;o como refer&ecirc;ncia em cuidados pessoais premium.</p>
+<h2>Import&acirc;ncia Da Est&eacute;tica No Morumbi Para O P&uacute;blico Exigente</h2>
+<p>Os centros de est&eacute;tica da regi&atilde;o possuem uma equipe multidisciplinar composta por dermatologistas, fisioterapeutas, esteticistas e nutricionistas, garantindo uma abordagem integrada para o cuidado pessoal. Essa sinergia permite que o cliente tenha acesso a um servi&ccedil;o completo, que contempla desde a preven&ccedil;&atilde;o at&eacute; a manuten&ccedil;&atilde;o dos resultados.</p>
+<p>Al&eacute;m disso, a localiza&ccedil;&atilde;o estrat&eacute;gica facilita o acesso para moradores e visitantes, que buscam conforto, exclusividade e seguran&ccedil;a em seus cuidados com a beleza e a sa&uacute;de.</p>
+<h2>Procedimentos Est&eacute;ticos Que Fazem A Diferen&ccedil;a</h2>
+<p>Al&eacute;m dos tratamentos convencionais, a zona sul oferece procedimentos est&eacute;ticos diferenciados que agregam valor ao cuidado pessoal premium. Entre eles, destacam-se:</p>
+<h3>Microagulhamento e skinboosters</h3>
+<p>O microagulhamento &eacute; um procedimento que estimula a produ&ccedil;&atilde;o natural de col&aacute;geno por meio de pequenas perfura&ccedil;&otilde;es na pele. Quando associado ao uso de skinboosters, que s&atilde;o inje&ccedil;&otilde;es de &aacute;cido hialur&ocirc;nico para hidrata&ccedil;&atilde;o profunda, o resultado &eacute; uma pele mais firme, hidratada e rejuvenescida.</p>
+<p>Esse tratamento &eacute; indicado para quem deseja melhorar a textura da pele, reduzir cicatrizes e linhas finas, proporcionando um aspecto mais saud&aacute;vel e natural.</p>
+<h3>Criolip&oacute;lise e tratamentos corporais n&atilde;o invasivos</h3>
+<p>A criolip&oacute;lise &eacute; uma t&eacute;cnica que utiliza o congelamento para eliminar as c&eacute;lulas de gordura localizada, sem a necessidade de cirurgia. Esse procedimento ganhou popularidade por ser eficaz e apresentar baixo &iacute;ndice de complica&ccedil;&otilde;es.</p>
+<p>Outros tratamentos n&atilde;o invasivos, como radiofrequ&ecirc;ncia e ultrassom, tamb&eacute;m contribuem para a tonifica&ccedil;&atilde;o da pele e a redu&ccedil;&atilde;o de medidas, sendo excelentes aliados para quem busca modelar o corpo de forma segura e confort&aacute;vel.</p>
+<h3>Depila&ccedil;&atilde;o a laser</h3>
+<p>A depila&ccedil;&atilde;o a laser &eacute; um procedimento que oferece resultados duradouros, eliminando os pelos de forma eficaz e com menos dor em compara&ccedil;&atilde;o aos m&eacute;todos tradicionais. Na zona sul, os centros especializados utilizam equipamentos de &uacute;ltima gera&ccedil;&atilde;o e contam com profissionais treinados para garantir seguran&ccedil;a e efici&ecirc;ncia.</p>
+<p>Esse tratamento &eacute; ideal para quem valoriza praticidade e deseja manter a pele sempre lisinha, com um cuidado que combina tecnologia e conforto.</p>
+<h2>Rotinas De Cuidados Para Potencializar Os Resultados</h2>
+<p>Para que os procedimentos ofere&ccedil;am o m&aacute;ximo de benef&iacute;cios, &eacute; fundamental adotar rotinas di&aacute;rias de cuidado que complementem os tratamentos realizados. A combina&ccedil;&atilde;o entre t&eacute;cnicas profissionais e h&aacute;bitos saud&aacute;veis faz toda a diferen&ccedil;a na manuten&ccedil;&atilde;o da beleza e do bem-estar.</p>
+<h3>Higiene e hidrata&ccedil;&atilde;o da pele</h3>
+<p>Manter a pele limpa e hidratada &eacute; o primeiro passo para garantir sa&uacute;de e vitalidade. O uso de produtos adequados ao tipo de pele, como sabonetes suaves, t&ocirc;nicos e hidratantes ricos em ativos, potencializa os efeitos dos procedimentos est&eacute;ticos.</p>
+<p>Al&eacute;m disso, a prote&ccedil;&atilde;o solar di&aacute;ria &eacute; indispens&aacute;vel para prevenir o envelhecimento precoce e evitar danos causados pelos raios UV.</p>
+<h3>Alimenta&ccedil;&atilde;o equilibrada e pr&aacute;tica de exerc&iacute;cios</h3>
+<p>Uma alimenta&ccedil;&atilde;o rica em nutrientes, vitaminas e antioxidantes contribui diretamente para a sa&uacute;de da pele e do corpo. Alimentos frescos, frutas, legumes, gorduras boas e prote&iacute;nas magras s&atilde;o aliados poderosos para quem busca um cuidado pessoal premium.</p>
+<p>A pr&aacute;tica regular de exerc&iacute;cios f&iacute;sicos, por sua vez, melhora a circula&ccedil;&atilde;o, ajuda no controle do peso e promove a libera&ccedil;&atilde;o de endorfinas, horm&ocirc;nios respons&aacute;veis pela sensa&ccedil;&atilde;o de bem-estar e felicidade.</p>
+<h3>Sono de qualidade e gerenciamento do estresse</h3>
+<p>O descanso adequado &eacute; fundamental para a regenera&ccedil;&atilde;o celular e o equil&iacute;brio hormonal. Dormir bem ajuda a manter a pele saud&aacute;vel, reduz a apar&ecirc;ncia de cansa&ccedil;o e fortalece o sistema imunol&oacute;gico.</p>
+<p>Al&eacute;m disso, t&eacute;cnicas de gerenciamento do estresse, como medita&ccedil;&atilde;o, yoga e massagens relaxantes, complementam o cuidado pessoal, promovendo harmonia entre corpo e mente.</p>
+<h2>Escolhendo O Local Ideal Para O Cuidado Pessoal Premium Na Zona Sul</h2>
+<p>A escolha do espa&ccedil;o para realizar os procedimentos &eacute; um fator determinante para o sucesso do tratamento. &Eacute; importante buscar locais que ofere&ccedil;am credibilidade, seguran&ccedil;a e conforto, al&eacute;m de profissionais qualificados e atualizados com as melhores pr&aacute;ticas do mercado.</p>
+<p>Verificar as certifica&ccedil;&otilde;es, as avalia&ccedil;&otilde;es de clientes e a variedade de servi&ccedil;os dispon&iacute;veis ajuda a garantir uma experi&ecirc;ncia satisfat&oacute;ria e alinhada &agrave;s expectativas.</p>
+<h2>Conclus&atilde;o</h2>
+<p>A zona sul &eacute; um verdadeiro polo de excel&ecirc;ncia para quem busca <strong>cuidados pessoais premium</strong>, oferecendo uma combina&ccedil;&atilde;o &uacute;nica de tecnologia, atendimento personalizado e ambientes sofisticados. Os tratamentos dispon&iacute;veis v&atilde;o desde procedimentos faciais e corporais at&eacute; terapias integrativas, que contemplam o bem-estar f&iacute;sico e emocional.</p>
+<p>Investir em uma rotina de cuidados completa, aliada &agrave; escolha de espa&ccedil;os especializados, faz toda a diferen&ccedil;a para manter a sa&uacute;de e a beleza em alto padr&atilde;o. Com tantas op&ccedil;&otilde;es e profissionais qualificados, essa regi&atilde;o se consolida como destino ideal para quem valoriza a qualidade e exclusividade nos cuidados pessoais.</p>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
