@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cirurgia Plástica na Vila Nova Conceição: Procedimentos Modernos, Segurança e Excelência Médica - Louca por Cosméticos</title>
+    <meta name="description" content="">
+    
+    
+    <link rel="canonical" href="https://loucaporcosmeticos.com.br/cirurgia-plástica-na-vila-nova-conceição-procedimentos-modernos-segurança-e-excelência-médica/" />
+    
+    
+    
+    
+    <link rel="icon" href="/static/uploads/logo-2.JPG" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/static/uploads/logo-2.JPG">
+    
+
+    <link rel="stylesheet" href="/themes/gshow_pop_v2/assets/css/style.css?v=2.0">
+    <!-- Bootstrap Icons (Usado internamente pelo CMS e para redes sociais) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Algumas lógicas do CMS dependem de classes Bootstrap puras (RaioX). Injetamos a versão ultra-leve do bootstrap apenas para os blocos do CMS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Sistema de Paletas de Cores -->
+    
+    <style>
+        :root {
+            --accent-color: #6f42c1 !important;
+            --accent-hover: #59359a !important;
+            --accent-dark: #472a7b !important;
+        }
+    </style>
+    
+
+    
+</head>
+<body>
+<header class="gs-header">
+    <div class="gs-header__container">
+        <!-- Lado Esquerdo -->
+        <div class="gs-header__left">
+            <button class="gs-header__menu-btn" id="gs-menu-toggle" aria-label="Abrir Menu">
+                <i class="bi bi-list"></i>
+                <span class="gs-header__menu-text">MENU</span>
+            </button>
+
+            <a href="/" class="gs-header__logo">
+                
+                    <img src="/static/uploads/logo.JPG" alt="Louca por Cosméticos">
+                
+            </a>
+        </div>
+
+        <!-- Centro: Nome do Site com fonte fina -->
+        <a href="/" class="gs-header__center">
+            Louca por Cosméticos
+        </a>
+
+        <!-- Lado Direito: Buscar -->
+        <div class="gs-header__right">
+            <button class="gs-header__right-item" id="gs-search-toggle" aria-label="Pesquisar" style="background:none; border:none; color:#fff;">
+                <i class="bi bi-search"></i>
+                <span style="text-transform: uppercase;">Buscar</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- Overlay de Busca (Search Modal) -->
+<div class="gs-search-overlay" id="gs-search-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; padding:2rem;">
+    <button id="gs-search-close" style="position:absolute; top:20px; right:30px; background:none; border:none; color:#fff; font-size:2rem; cursor:pointer;"><i class="bi bi-x-lg"></i></button>
+    <div style="max-width:600px; margin: 4rem auto 0; text-align:center;">
+        <input type="text" id="gs-search-input" placeholder="O que você está procurando?" style="width:100%; padding:1rem; font-size:1.5rem; border:none; border-bottom:2px solid var(--accent-color); background:transparent; color:#fff; outline:none; font-family:var(--font-ui);">
+        <div id="gs-search-results" style="margin-top:2rem; text-align:left; max-height:60vh; overflow-y:auto; font-family:var(--font-ui);"></div>
+    </div>
+</div>
+
+<!-- Sub-Barra de Categoria (Rosa Escuro) -->
+<div class="gs-header__subbar">
+    
+        <a href="/categoria/beleza/" style="color:#ffffff;">Beleza</a>
+    
+</div>
+
+<!-- Overlay Escuro do Menu -->
+<div class="gs-overlay" id="gs-overlay"></div>
+
+<!-- Menu Oculto (Offcanvas) -->
+<nav class="gs-nav-offcanvas" id="gs-offcanvas">
+    <button class="gs-nav-offcanvas__close" id="gs-menu-close" aria-label="Fechar Menu">
+        <i class="bi bi-x-lg"></i>
+    </button>
+    <br><br>
+    
+        <a href="/">INÍCIO</a>
+        
+            <a href="/categoria/beleza/">Beleza</a>
+        
+            <a href="/categoria/moda/">Moda</a>
+        
+    
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // --- MENU HAMBURGUER LOGIC ---
+        const toggleBtn = document.getElementById('gs-menu-toggle');
+        const closeBtn = document.getElementById('gs-menu-close');
+        const offcanvas = document.getElementById('gs-offcanvas');
+        const overlay = document.getElementById('gs-overlay');
+
+        function openMenu() {
+            offcanvas.classList.add('open');
+            overlay.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            offcanvas.classList.remove('open');
+            overlay.classList.remove('open');
+            document.body.style.overflow = 'auto';
+        }
+
+        if (toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if (overlay) overlay.addEventListener('click', closeMenu);
+
+        // --- SEARCH LOGIC ---
+        const searchToggle = document.getElementById('gs-search-toggle');
+        const searchOverlay = document.getElementById('gs-search-overlay');
+        const searchClose = document.getElementById('gs-search-close');
+        const searchInput = document.getElementById('gs-search-input');
+        const searchResults = document.getElementById('gs-search-results');
+        let postsData = [];
+
+        if (searchToggle && searchOverlay) {
+            searchToggle.addEventListener('click', function() {
+                searchOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                searchInput.focus();
+                
+                // Fetch posts.json only once
+                if (postsData.length === 0) {
+                    fetch('/posts.json')
+                        .then(response => response.json())
+                        .then(data => { postsData = data; })
+                        .catch(err => console.error('Erro ao carregar pesquisa', err));
+                }
+            });
+            
+            searchClose.addEventListener('click', function() {
+                searchOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            searchInput.addEventListener('input', function(e) {
+                const query = e.target.value.toLowerCase();
+                searchResults.innerHTML = '';
+                if (query.length < 2) return;
+                
+                const filtered = postsData.filter(post => post.title.toLowerCase().includes(query));
+                
+                if (filtered.length === 0) {
+                    searchResults.innerHTML = '<p style="color:#aaa; text-align:center; padding:1rem;">Nenhum resultado encontrado.</p>';
+                    return;
+                }
+                
+                filtered.forEach(post => {
+                    const link = document.createElement('a');
+                    link.href = '/' + post.slug + '/';
+                    link.style.display = 'flex';
+                    link.style.gap = '15px';
+                    link.style.alignItems = 'center';
+                    link.style.padding = '10px 0';
+                    link.style.borderBottom = '1px solid #333';
+                    link.style.color = '#fff';
+                    link.style.textDecoration = 'none';
+                    
+                    let imgHtml = post.image ? `<img src="${post.image}" style="width:60px; height:60px; object-fit:cover; border-radius:4px;">` : `<div style="width:60px; height:60px; background:#444; border-radius:4px;"></div>`;
+                    
+                    link.innerHTML = imgHtml + `<div><div style="font-size:0.8rem; color:#aaa;">${post.date || ''}</div><div style="font-weight:700;">${post.title}</div></div>`;
+                    searchResults.appendChild(link);
+                });
+            });
+        }
+    });
+</script>
+
+<main class="container" style="padding-top: 3rem;">
+    <article>
+        <header class="post-header">
+            
+            <h1 class="post-title">Cirurgia Plástica na Vila Nova Conceição: Procedimentos Modernos, Segurança e Excelência Médica</h1>
+            
+            
+
+            <div class="post-meta" style="margin-top: 1rem; border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 1rem 0; max-width: 760px; margin-left: auto; margin-right: auto;">
+                
+                    <div style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        
+                            <i class="bi bi-person-circle" style="font-size: 2rem; color: var(--text-muted);"></i>
+                        
+                        <span style="font-weight: 700; color: var(--text-main);">Por <a href="/autor/ana-beatriz/" style="color: var(--accent-color);">Ana Beatriz</a></span>
+                    </div>
+                
+                <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem; flex: 1 1 auto;">
+                    <time datetime="2026-10-20" style="color: var(--text-muted);">
+                        20/10/2026 14:01
+                    </time>
+                    <div style="display: flex; gap: 15px; font-size: 1.3rem; color: var(--accent-color);">
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+            <figure class="post-featured-image">
+                <img src="/static/uploads/cirurgia-plastica-na-vila-nova-conceicao-procedimentos-modernos-seguranca-e-excelencia-medica.webp?v=1792504905" alt="Cirurgia Plástica na Vila Nova Conceição: Procedimentos Modernos, Segurança e Excelência Médica">
+            </figure>
+        
+
+        
+
+        <div class="post-content">
+            <p>A busca pela harmonia est&eacute;tica e pelo bem-estar tem impulsionado o crescimento da <strong>cirurgia pl&aacute;stica</strong> em diversas regi&otilde;es, especialmente em &aacute;reas urbanas sofisticadas, onde o acesso a servi&ccedil;os m&eacute;dicos de alta qualidade &eacute; uma prioridade. A Vila Nova Concei&ccedil;&atilde;o, bairro nobre de S&atilde;o Paulo, destaca-se por concentrar cl&iacute;nicas e profissionais que oferecem tratamentos avan&ccedil;ados com foco na seguran&ccedil;a e na satisfa&ccedil;&atilde;o dos pacientes. A <a href="https://www.laprat.com.br/cirurgia-plastica-na-vila-nova-conceicao/" target="_blank" rel="noopener">cirurgia pl&aacute;stica na Vila Nova Concei&ccedil;&atilde;o</a> re&uacute;ne o que h&aacute; de mais moderno em tecnologia e t&eacute;cnicas, aliada a uma equipe m&eacute;dica altamente qualificada, garantindo resultados naturais e personalizados.</p>
+<p>Este ambiente privilegiado atrai pacientes que valorizam n&atilde;o apenas a est&eacute;tica, mas tamb&eacute;m a excel&ecirc;ncia no atendimento e a seguran&ccedil;a durante todo o processo cir&uacute;rgico. Com uma infraestrutura que acompanha as mais rigorosas normas internacionais, as cl&iacute;nicas da regi&atilde;o promovem procedimentos que v&atilde;o desde interven&ccedil;&otilde;es minimamente invasivas at&eacute; cirurgias complexas, sempre com foco na recupera&ccedil;&atilde;o r&aacute;pida e no conforto do paciente.</p>
+<h2>Avan&ccedil;os Tecnol&oacute;gicos Nos Procedimentos Est&eacute;ticos</h2>
+<h3>Tecnologia a Servi&ccedil;o da Beleza</h3>
+<p>O avan&ccedil;o da <strong>tecnologia m&eacute;dica</strong> tem sido um dos principais motores da evolu&ccedil;&atilde;o na cirurgia pl&aacute;stica. Equipamentos modernos, como laser de &uacute;ltima gera&ccedil;&atilde;o, ultrassom e t&eacute;cnicas assistidas por rob&oacute;tica, permitem interven&ccedil;&otilde;es mais precisas e menos invasivas. Isso resulta em menor tempo de recupera&ccedil;&atilde;o, cicatrizes reduzidas e maior seguran&ccedil;a durante o procedimento.</p>
+<p>Na Vila Nova Concei&ccedil;&atilde;o, as cl&iacute;nicas incorporam essas tecnologias de ponta, proporcionando aos pacientes acesso a tratamentos inovadores que antes eram restritos a centros de refer&ecirc;ncia internacionais. Al&eacute;m disso, a utiliza&ccedil;&atilde;o de tecnologias digitais, como a simula&ccedil;&atilde;o 3D, possibilita que o paciente visualize o resultado esperado antes da cirurgia, aumentando a confian&ccedil;a e a assertividade do tratamento.</p>
+<h3>Procedimentos Minimante Invasivos com Resultados Expressivos</h3>
+<p>A busca por resultados est&eacute;ticos naturais e pelo menor impacto poss&iacute;vel no organismo tem levado ao crescimento dos procedimentos minimamente invasivos. T&eacute;cnicas como a aplica&ccedil;&atilde;o de toxina botul&iacute;nica, preenchimentos d&eacute;rmicos, peelings qu&iacute;micos e microagulhamento s&atilde;o exemplos de interven&ccedil;&otilde;es que podem ser realizadas sem a necessidade de cirurgia tradicional.</p>
+<p>Essas t&eacute;cnicas s&atilde;o altamente valorizadas na regi&atilde;o, onde a demanda por tratamentos eficazes, r&aacute;pidos e com pouco tempo de recupera&ccedil;&atilde;o &eacute; grande. A combina&ccedil;&atilde;o de procedimentos cir&uacute;rgicos com terapias n&atilde;o invasivas &eacute; uma tend&ecirc;ncia que vem ganhando espa&ccedil;o, oferecendo solu&ccedil;&otilde;es personalizadas para diferentes necessidades est&eacute;ticas.</p>
+<h2>Seguran&ccedil;a Em Primeiro Lugar: Protocolos Rigorosos E Atendimento Humanizado</h2>
+<h3>Normas e Certifica&ccedil;&otilde;es</h3>
+<p>A seguran&ccedil;a &eacute; um dos pilares fundamentais da pr&aacute;tica m&eacute;dica dedicada &agrave; est&eacute;tica. As cl&iacute;nicas da Vila Nova Concei&ccedil;&atilde;o seguem protocolos rigorosos que envolvem desde a avalia&ccedil;&atilde;o pr&eacute;-operat&oacute;ria at&eacute; o acompanhamento p&oacute;s-cir&uacute;rgico. A adequa&ccedil;&atilde;o &agrave;s normas da Ag&ecirc;ncia Nacional de Vigil&acirc;ncia Sanit&aacute;ria (ANVISA) e a obten&ccedil;&atilde;o de certifica&ccedil;&otilde;es internacionais s&atilde;o diferenciais que garantem a qualidade dos servi&ccedil;os prestados.</p>
+<p>Al&eacute;m disso, a presen&ccedil;a de equipes multidisciplinares, incluindo anestesistas, enfermeiros especializados e fisioterapeutas, assegura um cuidado integral ao paciente. O planejamento detalhado de cada etapa do tratamento minimiza riscos e potencializa os resultados, promovendo uma experi&ecirc;ncia segura e tranquila.</p>
+<h3>Atendimento Personalizado e Humanizado</h3>
+<p>Mais que a t&eacute;cnica apurada, o atendimento humanizado &eacute; fundamental para o sucesso dos procedimentos est&eacute;ticos. Os profissionais da regi&atilde;o investem em uma comunica&ccedil;&atilde;o aberta e transparente, esclarecendo d&uacute;vidas e ajustando expectativas para que o paciente se sinta acolhido e respeitado.</p>
+<p>A personaliza&ccedil;&atilde;o do tratamento &eacute; outro aspecto essencial. Cada pessoa apresenta caracter&iacute;sticas &uacute;nicas, que devem ser consideradas para alcan&ccedil;ar a harmonia entre forma e fun&ccedil;&atilde;o. O di&aacute;logo constante entre m&eacute;dico e paciente contribui para a constru&ccedil;&atilde;o de um plano cir&uacute;rgico alinhado aos objetivos individuais, respeitando limites e promovendo autoestima.</p>
+<h2>Procedimentos Mais Procurados E Suas Tend&ecirc;ncias</h2>
+<h3>Rinoplastia: Est&eacute;tica e Funcionalidade</h3>
+<p>A rinoplastia &eacute; um dos procedimentos mais requisitados, combinando melhorias est&eacute;ticas com corre&ccedil;&atilde;o funcional, como a respira&ccedil;&atilde;o. Na Vila Nova Concei&ccedil;&atilde;o, cirurgi&otilde;es especializados aplicam t&eacute;cnicas modernas que permitem remodelar o nariz com precis&atilde;o, respeitando a harmonia facial e a naturalidade do resultado.</p>
+<p>A utiliza&ccedil;&atilde;o de enxertos aut&oacute;logos e a abordagem conservadora s&atilde;o tend&ecirc;ncias que minimizam traumas e aceleram a recupera&ccedil;&atilde;o. O acompanhamento p&oacute;s-operat&oacute;rio cuidadoso &eacute; essencial para assegurar a manuten&ccedil;&atilde;o dos resultados e o conforto do paciente.</p>
+<h3>Lipoaspira&ccedil;&atilde;o e Contorno Corporal</h3>
+<p>A lipoaspira&ccedil;&atilde;o permanece como uma das t&eacute;cnicas mais populares para a remodela&ccedil;&atilde;o corporal. As cl&iacute;nicas locais oferecem abordagens avan&ccedil;adas, como a lipoaspira&ccedil;&atilde;o a laser e a lipoescultura, que promovem a remo&ccedil;&atilde;o de gordura localizada com maior seguran&ccedil;a e defini&ccedil;&atilde;o dos contornos.</p>
+<p>Al&eacute;m disso, a combina&ccedil;&atilde;o com procedimentos complementares, como a abdominoplastia ou o lifting corporal, proporciona resultados integrados que valorizam a silhueta de forma natural e equilibrada.</p>
+<h3>Cirurgia de Mama: Diversidade de Op&ccedil;&otilde;es</h3>
+<p>As interven&ccedil;&otilde;es mam&aacute;rias abrangem desde o aumento com pr&oacute;teses at&eacute; a mastopexia e a reconstru&ccedil;&atilde;o p&oacute;s-mastectomia. A versatilidade dos procedimentos permite que cada paciente escolha a melhor alternativa para suas necessidades e desejos.</p>
+<p>Na regi&atilde;o, profissionais experientes utilizam implantes de &uacute;ltima gera&ccedil;&atilde;o, com diferentes formatos e texturas, garantindo seguran&ccedil;a e resultado est&eacute;tico aprimorado. O planejamento detalhado inclui a avalia&ccedil;&atilde;o das propor&ccedil;&otilde;es corporais e da sa&uacute;de geral, assegurando uma recupera&ccedil;&atilde;o eficiente e satisfat&oacute;ria.</p>
+<h2>Import&acirc;ncia Da Qualifica&ccedil;&atilde;o Profissional E Atualiza&ccedil;&atilde;o Cont&iacute;nua</h2>
+<h3>Forma&ccedil;&atilde;o e Experi&ecirc;ncia dos Cirurgi&otilde;es</h3>
+<p>A excel&ecirc;ncia m&eacute;dica &eacute; resultado da forma&ccedil;&atilde;o s&oacute;lida e da experi&ecirc;ncia pr&aacute;tica acumulada ao longo dos anos. Os cirurgi&otilde;es pl&aacute;sticos da regi&atilde;o investem constantemente em especializa&ccedil;&otilde;es, participando de congressos nacionais e internacionais, al&eacute;m de cursos de atualiza&ccedil;&atilde;o que incorporam as novidades do mercado.</p>
+<p>A atua&ccedil;&atilde;o &eacute;tica e fundamentada em evid&ecirc;ncias cient&iacute;ficas &eacute; um diferencial que garante aos pacientes confian&ccedil;a e tranquilidade. A escolha do profissional adequado deve considerar n&atilde;o apenas a reputa&ccedil;&atilde;o, mas tamb&eacute;m a afinidade com o perfil do paciente e a metodologia aplicada.</p>
+<h3>Pesquisa e Inova&ccedil;&atilde;o</h3>
+<p>O envolvimento com pesquisa cl&iacute;nica e o desenvolvimento de novas t&eacute;cnicas s&atilde;o aspectos que elevam o padr&atilde;o dos servi&ccedil;os prestados. Cl&iacute;nicas que mant&ecirc;m parcerias com institui&ccedil;&otilde;es acad&ecirc;micas e participam de estudos cient&iacute;ficos contribuem para a evolu&ccedil;&atilde;o da especialidade, beneficiando diretamente os pacientes com tratamentos mais eficazes e seguros.</p>
+<p>A inova&ccedil;&atilde;o tamb&eacute;m est&aacute; presente na gest&atilde;o do atendimento, com o uso de sistemas digitais que facilitam o acompanhamento do processo cir&uacute;rgico, agendamento e comunica&ccedil;&atilde;o direta com a equipe m&eacute;dica.</p>
+<h2>Como Escolher A Cl&iacute;nica Ideal</h2>
+<h3>Avalia&ccedil;&atilde;o da Estrutura e Equipamentos</h3>
+<p>A escolha da cl&iacute;nica &eacute; um passo crucial para o sucesso do procedimento. &Eacute; importante verificar se o local disp&otilde;e de infraestrutura adequada, com salas de cirurgia equipadas, ambiente climatizado, &aacute;rea de recupera&ccedil;&atilde;o confort&aacute;vel e suporte para emerg&ecirc;ncias.</p>
+<p>A transpar&ecirc;ncia sobre os equipamentos utilizados e os protocolos de seguran&ccedil;a contribuem para uma decis&atilde;o mais segura. Cl&iacute;nicas que investem em tecnologia de ponta tendem a oferecer resultados superiores e minimizar riscos.</p>
+<h3>Atendimento e Transpar&ecirc;ncia</h3>
+<p>O primeiro contato com a equipe m&eacute;dica deve ser acolhedor e esclarecedor. A disponibilidade para responder perguntas, explicar detalhes do procedimento e discutir expectativas &eacute; fundamental para estabelecer uma rela&ccedil;&atilde;o de confian&ccedil;a.</p>
+<p>Al&eacute;m disso, a clareza sobre custos, formas de pagamento e poss&iacute;veis intercorr&ecirc;ncias evita surpresas e permite um planejamento financeiro adequado, contribuindo para uma experi&ecirc;ncia positiva.</p>
+<h2>Benef&iacute;cios Da Localiza&ccedil;&atilde;o E Conveni&ecirc;ncia</h2>
+<p>A Vila Nova Concei&ccedil;&atilde;o oferece uma localiza&ccedil;&atilde;o estrat&eacute;gica, facilitando o acesso tanto para residentes locais quanto para pacientes de outras regi&otilde;es da cidade e at&eacute; de outros estados. A proximidade com hospitais de refer&ecirc;ncia, hot&eacute;is e centros comerciais agrega conforto e praticidade ao processo cir&uacute;rgico.</p>
+<p>Essa conveni&ecirc;ncia &eacute; valorizada por quem busca um servi&ccedil;o de alta qualidade sem abrir m&atilde;o da comodidade e do suporte necess&aacute;rio durante todas as fases do tratamento.</p>
+<h2>Considera&ccedil;&otilde;es Finais Sobre Cuidados E Resultados</h2>
+<p>A combina&ccedil;&atilde;o de procedimentos modernos, equipe qualificada, infraestrutura avan&ccedil;ada e atendimento humanizado cria um ambiente prop&iacute;cio para que os pacientes alcancem suas metas est&eacute;ticas com seguran&ccedil;a e satisfa&ccedil;&atilde;o.</p>
+<p>Investir em uma avalia&ccedil;&atilde;o detalhada, seguir as orienta&ccedil;&otilde;es m&eacute;dicas e manter o acompanhamento p&oacute;s-operat&oacute;rio s&atilde;o atitudes essenciais para garantir a durabilidade dos resultados e o bem-estar geral.</p>
+<p>A regi&atilde;o se destaca como um polo de refer&ecirc;ncia em est&eacute;tica, onde a busca pela excel&ecirc;ncia m&eacute;dica e o compromisso com a seguran&ccedil;a est&atilde;o sempre em primeiro lugar, proporcionando experi&ecirc;ncias transformadoras e de alta qualidade para todos que desejam melhorar sua apar&ecirc;ncia e autoestima.</p>
+        </div>
+
+        
+    </article>
+</main>
+
+<footer class="gs-footer">
+    <div class="container">
+        <div class="gs-footer__social">
+            
+            
+            
+            
+        </div>
+        
+        <ul class="gs-footer__menu">
+            
+        </ul>
+        
+        
+        <div class="gs-footer__copyright">
+            <p>@2026</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Carrossel nativo simplificado (substituto das chamadas de script originais caso tenha blocos CMS)
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            const btnPrev = e.target.closest('.btn-carousel-prev');
+            if (btnPrev) {
+                const wrapper = btnPrev.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft <= 5) { track.scrollTo({ left: track.scrollWidth, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: -scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+            const btnNext = e.target.closest('.btn-carousel-next');
+            if (btnNext) {
+                const wrapper = btnNext.closest('div[id^="carrossel-"]');
+                const track = wrapper.querySelector('.dsc-track');
+                const item = track.querySelector('.dsc-item');
+                if (track && item) {
+                    const scrollAmount = item.offsetWidth + 20;
+                    if (track.scrollLeft + track.offsetWidth >= track.scrollWidth - 5) { track.scrollTo({ left: 0, behavior: 'smooth' }); } 
+                    else { track.scrollBy({ left: scrollAmount, behavior: 'smooth' }); }
+                }
+                return;
+            }
+        });
+    });
+</script>
+</body>
+</html>
